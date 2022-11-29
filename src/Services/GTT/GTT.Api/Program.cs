@@ -22,13 +22,9 @@ var host = hostBuilder
     .ConfigureServices((context, services) =>
     {
         //services.AddOidcApiAuthorization();
-
         var configuration = context.Configuration;
-
-
         services
             .AddInfrastructure(configuration);
-
     })
     .Build();
 
