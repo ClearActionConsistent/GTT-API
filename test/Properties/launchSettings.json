@@ -1,8 +1,8 @@
 {
   "profiles": {
-    "GTT_BE": {
+    "test": {
       "commandName": "Project",
-      "commandLineArgs": "--port 7123",
+      "commandLineArgs": "--port 7256",
       "launchBrowser": false
     }
   }

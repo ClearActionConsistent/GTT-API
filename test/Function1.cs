@@ -1,10 +1,9 @@
-using System.Collections.Generic;
 using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 
-namespace GTT_BE
+namespace test
 {
     public class Function1
     {
