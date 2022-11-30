@@ -5,7 +5,7 @@ using System.Data;
 
 namespace GTT.Infrastructure
 {
-    public class UnitOfWork: IUnitOfWork
+    public class UnitOfWork: IUnitOfWork, IDisposable
     {
         private readonly IDbConnection _connection;
         private readonly IDbTransaction _tran;
@@ -24,6 +24,12 @@ namespace GTT.Infrastructure
         public void Complete()
         {
             _tran?.Commit();
+            _connection?.Close();
+        }
+
+        public void Dispose()
+        {
+            _tran?.Rollback();
             _connection?.Close();
         }
 
