@@ -43,11 +43,11 @@ namespace GTT.API
                 //var classes = await _mediator.Send(new GetClasses.Query(""));
                 //this is sample code for sending a command
                 var command = new CreateChallange.Command(
-                        new CreateChallengeData
-                        {
-                            Name = ""
-                        }
-                    );
+                    new CreateChallengeData
+                    {
+                        Name = "ok"
+                    }
+                );
                 var challenge = await _mediator.Send(command);
                 var response = req.CreateResponse(HttpStatusCode.OK);
                 response.Headers.Add("Content-Type", "text/plain; charset=utf-8");

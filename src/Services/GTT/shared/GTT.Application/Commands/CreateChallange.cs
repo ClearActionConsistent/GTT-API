@@ -31,7 +31,7 @@ namespace GTT.Application.Commands
             }
             public async Task<ChallengeVM> Handle(Command request, CancellationToken cancellationToken)
             {
-                return await _service.CreateChallengeAsync(request.createChallengeData);
+                return await _service.CreateChallengeAsync(request.createChallengeData, cancellationToken);
             }
         }
     }
