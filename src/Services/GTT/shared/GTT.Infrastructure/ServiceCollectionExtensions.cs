@@ -1,9 +1,9 @@
 using FluentValidation;
 using GTT.Application;
 using GTT.Application.Behaviors;
-using GTT.Application.Services;
+using GTT.Application.Repositories;
 using GTT.Infrastructure.Data;
-using GTT.Infrastructure.Services;
+using GTT.Infrastructure.Repositories;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,8 +31,11 @@ public static class ServiceCollectionExtensions
 
     private static void AddServices(IServiceCollection services)
     {
+        services.AddTransient(typeof(IUnitOfWork), typeof(UnitOfWork));
         services.AddTransient(typeof(IDbConnectionFactory), typeof(SqlDbConnectionFactory));
-        services.AddTransient(typeof(IChallengeService), typeof(ChallengeService));
+        services.AddTransient(typeof(IChallengeRepository), typeof(ChallengeRepository));
+        services.AddTransient(typeof(IClassRepository), typeof(ClassRepository));
+
     }
     private static void AddOptions(IServiceCollection services)
     {

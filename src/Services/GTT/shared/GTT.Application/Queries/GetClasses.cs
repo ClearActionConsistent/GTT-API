@@ -1,7 +1,7 @@
 using FluentValidation;
-using MediatR;
-using GTT.Application.Services;
+using GTT.Application.Repositories;
 using GTT.Application.ViewModels;
+using MediatR;
 
 namespace Thrive.Customers.Application.Queries
 {
@@ -23,14 +23,16 @@ namespace Thrive.Customers.Application.Queries
 
         internal class Handler : IRequestHandler<Query, List<ClassVM>>
         {
-            private readonly IClassService _service;
-            public Handler(IClassService service)
+            private readonly IClassRepository _repo;
+            public Handler(IClassRepository repo)
             {
-                _service = service;
+                _repo = repo;
             }
             public async Task<List<ClassVM>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _service.GetClassesByNameAsync(request.name);
+                //use repo to get list of entity
+                //use some sort of mapping to convert to list of classVm
+                return new List<ClassVM>();
             }
         }
      

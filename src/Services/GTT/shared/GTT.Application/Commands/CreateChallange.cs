@@ -1,6 +1,7 @@
 using FluentValidation;
-using GTT.Application.Services;
+using GTT.Application.Repositories;
 using GTT.Application.ViewModels;
+using GTT.Domain.Entities;
 using MediatR;
 
 namespace GTT.Application.Commands
@@ -23,15 +24,17 @@ namespace GTT.Application.Commands
 
         internal class Handler : IRequestHandler<Command, ChallengeVM>
         {
-            public IChallengeService _service;
+            public IChallengeRepository _repo;
 
-            public Handler(IChallengeService service)
+            public Handler(IChallengeRepository repo)
             {
-                _service = service;
+                _repo = repo;
             }
             public async Task<ChallengeVM> Handle(Command request, CancellationToken cancellationToken)
             {
-                return await _service.CreateChallengeAsync(request.createChallengeData, cancellationToken);
+                //map data to entity
+                var result = await _repo.AddAsync(new Challenge { });
+                return new ChallengeVM();
             }
         }
     }
