@@ -1,4 +1,5 @@
 using FluentValidation;
+using GTT.Application;
 using GTT.Application.Repositories;
 using GTT.Application.ViewModels;
 using MediatR;
@@ -30,8 +31,7 @@ namespace Thrive.Customers.Application.Queries
             }
             public async Task<List<ClassVM>> Handle(Query request, CancellationToken cancellationToken)
             {
-                //use repo to get list of entity
-                //use some sort of mapping to convert to list of classVm
+                
                 return new List<ClassVM>();
             }
         }

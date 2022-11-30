@@ -40,7 +40,7 @@ namespace GTT.API
             try
             {
                 //this is sample code for sending a query
-                //var classes = await _mediator.Send(new GetClasses.Query(""));
+                var classes = await _mediator.Send(new GetClasses.Query("ok"));
                 //this is sample code for sending a command
                 var command = new CreateChallange.Command(
                     new CreateChallengeData
@@ -48,7 +48,7 @@ namespace GTT.API
                         Name = "ok"
                     }
                 );
-                var challenge = await _mediator.Send(command);
+                //var challenge = await _mediator.Send(command);
                 var response = req.CreateResponse(HttpStatusCode.OK);
                 response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
                 response.WriteString("Welcome to Azure Functions!");

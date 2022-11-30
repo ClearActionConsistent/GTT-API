@@ -2,142 +2,71 @@
 using GTT.Application;
 using GTT.Application.Repositories;
 using GTT.Domain.Entities;
+using System.Data;
 
 namespace GTT.Infrastructure.Repositories
 {
     public class ChallengeRepository : IChallengeRepository
     {
-        private readonly IDbConnectionFactory _dbConnectionFactory;
-        public ChallengeRepository(IDbConnectionFactory dbConnectionFactory)
+        private readonly IDbConnection _connection;
+        private readonly IDbTransaction _tran;
+        public ChallengeRepository(IDbConnection connection, IDbTransaction tran)
         {
-            _dbConnectionFactory = dbConnectionFactory;
+            _connection = connection;
+            _tran = tran;
         }
 
         public async Task<int> AddAsync(Challenge entity)
         {
-            var connection = await _dbConnectionFactory.CreateConnectionAsync();
-            var tran = connection.BeginTransaction();
-
-            try
-            {
-                var insertChallengeSql = @"
+            var insertChallengeSql = @"
                     INSERT INTO Challenge(field1, field2, field3)
                     VALUES(@field1, @field2, @field3)
                     SET @ChallengeId = SCOPE_IDENTITY()
                     SELECT * FROM Challenge WHERE ChallengeId = @ChallengeId
                 ";
 
-                var param = new
-                {
-                    field1 = "entity.field1",
-                    field2 = "entity.field2",
-                    field3 = "entity.field3"
-                };
-
-                var result = await connection.ExecuteAsync(insertChallengeSql, param, transaction: tran);
-
-                tran.Commit();
-                connection.Close();
-
-                return result;
-            }
-            catch
+            var param = new
             {
-                throw;
-            }
-            finally
-            {
-                tran.Rollback();
-                connection?.Close();
-            }
+                field1 = "entity.field1",
+                field2 = "entity.field2",
+                field3 = "entity.field3"
+            };
+
+            var result = await _connection.ExecuteAsync(insertChallengeSql, param, transaction: _tran);
+
+            return result;
         }
 
         public async Task<int> DeleteAsync(int id)
         {
-            var connection = await _dbConnectionFactory.CreateConnectionAsync();
+            var insertChallengeSql = @"DELETE FROM Products WHERE Id = @Id";
+            var result = await _connection.ExecuteAsync(insertChallengeSql, new { Id = id }, _tran);
 
-            try
-            {
-                var insertChallengeSql = @"DELETE FROM Products WHERE Id = @Id";
-                var result = await connection.ExecuteAsync(insertChallengeSql, new { Id = id});
-                connection.Close();
-
-                return result;
-            }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                connection?.Close();
-            }
+            return result;
         }
 
         public async Task<IReadOnlyList<Challenge>> GetAllAsync()
         {
-            var connection = await _dbConnectionFactory.CreateConnectionAsync();
+            var insertChallengeSql = @"SELECT * FROM Challenge";
+            var result = await _connection.QueryAsync<Challenge>(insertChallengeSql, _tran);
 
-            try
-            {
-                var insertChallengeSql = @"SELECT * FROM Challenge";
-                var result = await connection.QueryAsync<Challenge>(insertChallengeSql);
-                connection.Close();
-                
-                return result.ToList();
-            }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                connection?.Close();
-            }
+            return result.ToList();
         }
 
         public async Task<Challenge> GetByIdAsync(int id)
         {
-            var connection = await _dbConnectionFactory.CreateConnectionAsync();
+            var insertChallengeSql = @"SELECT * FROM Challenge WHERE Id = @Id";
+            var result = await _connection.QuerySingleOrDefaultAsync<Challenge>(insertChallengeSql, new { Id = id }, _tran);
 
-            try
-            {
-                var insertChallengeSql = @"SELECT * FROM Challenge WHERE Id = @Id";
-                var result = await connection.QuerySingleOrDefaultAsync<Challenge>(insertChallengeSql, new {Id = id});
-                connection.Close();
-
-                return result;
-            }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                connection?.Close();
-            }
+            return result;
         }
 
         public async Task<int> UpdateAsync(Challenge entity)
         {
-            var connection = await _dbConnectionFactory.CreateConnectionAsync();
+            var sql = @"UPDATE Challenge SET something equal something";
+            var result = await _connection.ExecuteAsync(sql, entity, _tran);
 
-            try
-            {
-                var sql = @"UPDATE Challenge SET something equal something";
-                var result = await connection.ExecuteAsync(sql, entity);
-                connection.Close();
-
-                return result;
-            }
-            catch
-            {
-                throw;
-            }
-            finally
-            {
-                connection?.Close();
-            }
+            return result;
         }
     }
 }

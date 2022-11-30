@@ -4,5 +4,7 @@
     {
         IChallengeRepository Challenges { get; }
         IClassRepository Classes { get; }
+        void Complete();
+        void Rollback();
     }
 }

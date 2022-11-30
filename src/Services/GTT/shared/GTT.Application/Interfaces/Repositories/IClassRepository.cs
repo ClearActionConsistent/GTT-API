@@ -7,3 +7,4 @@ namespace GTT.Application.Repositories
 
     }
 }
+ 

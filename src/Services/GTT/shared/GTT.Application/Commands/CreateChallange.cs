@@ -24,16 +24,17 @@ namespace GTT.Application.Commands
 
         internal class Handler : IRequestHandler<Command, ChallengeVM>
         {
-            public IChallengeRepository _repo;
+            public IUnitOfWork _uow;
 
-            public Handler(IChallengeRepository repo)
+            public Handler(IUnitOfWork uow)
             {
-                _repo = repo;
+                _uow = uow;
             }
             public async Task<ChallengeVM> Handle(Command request, CancellationToken cancellationToken)
             {
                 //map data to entity
-                var result = await _repo.AddAsync(new Challenge { });
+                var result = await _uow.Challenges.AddAsync(new Challenge { });
+                _uow.Complete();
                 return new ChallengeVM();
             }
         }

@@ -37,5 +37,21 @@ namespace GTT.Infrastructure.Data
             await connection.OpenAsync(cancellationToken);
             return connection;
         }
+
+        public IDbConnection CreateConnection()
+        {
+            var connectionString = _settings.Value.SqlConnectionString;
+            var connection = new SqlConnection(connectionString);
+
+            if (_settings.Value.SqlUseAccessToken)
+            {
+                var tokenRequest = new TokenRequestContext(new[] { "https://database.windows.net/.default" });
+                var accessToken = new DefaultAzureCredential().GetToken(tokenRequest);
+                connection.AccessToken = accessToken.Token;
+            }
+
+            connection.Open();
+            return connection;
+        }
     }
 }
