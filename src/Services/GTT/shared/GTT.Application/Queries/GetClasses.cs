@@ -16,6 +16,7 @@ namespace Thrive.Customers.Application.Queries
             public Validator()
             {
                 RuleFor(x => x.name)
+                    .NotEmpty().WithMessage("Class name is not empty")
                     .NotNull().WithMessage("Class name is required");
             }
         }

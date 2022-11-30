@@ -1,3 +1,4 @@
+using FluentValidation;
 using GTT.Application.Services;
 using GTT.Application.ViewModels;
 using MediatR;
@@ -9,6 +10,16 @@ namespace GTT.Application.Commands
         public record Command(
         CreateChallengeData createChallengeData
         ) : IRequest<ChallengeVM>;
+
+        internal class Validator : AbstractValidator<Command>
+        {
+            public Validator()
+            {
+                RuleFor(x => x.createChallengeData.Name)
+                     .NotNull().WithMessage("Challege name is required")
+                     .NotEmpty().WithMessage("Challege name is not empty");
+            }
+        }
 
         internal class Handler : IRequestHandler<Command, ChallengeVM>
         {
