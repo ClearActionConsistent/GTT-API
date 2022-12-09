@@ -3,7 +3,7 @@
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    "SqlOptions__SqlConnectionString": "Data Source=tcp:alexdev.database.windows.net;Initial Catalog=alex;Persist Security Info=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;User ID=DevAlex;Password=b831R@f19e;",
+    "SqlOptions__SqlConnectionString": "Data Source=tcp:alexdev.database.windows.net;Initial Catalog=alex;Persist Security Info=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;User ID=ffffff;Password=ffffff;",
     "SqlOptions__SqlUseAccessToken": "false"
   }
 }
