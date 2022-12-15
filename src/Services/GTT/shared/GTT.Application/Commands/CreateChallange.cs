@@ -16,25 +16,63 @@ namespace GTT.Application.Commands
         {
             public Validator()
             {
-                RuleFor(x => x.createChallengeData.Name)
-                     .NotNull().WithMessage("Challege name is required")
-                     .NotEmpty().WithMessage("Challege name is not empty");
+                RuleFor(x => x.createChallengeData.Calories)
+                     .NotNull().WithMessage("Challege Calories is required")
+                     .NotEmpty().WithMessage("Challege Calories is not empty");
+
+                RuleFor(x => x.createChallengeData.SplatPoints)
+                     .NotNull().WithMessage("Challege SplatPoints is required")
+                     .NotEmpty().WithMessage("Challege SplatPoints is not empty");
+
+                RuleFor(x => x.createChallengeData.AvgHr)
+                     .NotNull().WithMessage("Challege Avg Hr is required")
+                     .NotEmpty().WithMessage("Challege Avg Hr is not empty");
+
+
+                RuleFor(x => x.createChallengeData.MaxHr)
+                     .NotNull().WithMessage("Challege Max Hr is required")
+                     .NotEmpty().WithMessage("Challege Max Hr is not empty");
+
+                RuleFor(x => x.createChallengeData.Miles)
+                     .NotNull().WithMessage("Challege Miles is required")
+                     .NotEmpty().WithMessage("Challege Miles is not empty");
+
+                RuleFor(x => x.createChallengeData.Steps)
+                     .NotNull().WithMessage("Challege Steps is required")
+                     .NotEmpty().WithMessage("Challege Steps is not empty");
             }
         }
 
         internal class Handler : IRequestHandler<Command, ChallengeVM>
-        {
-            public IUnitOfWork _uow;
 
-            public Handler(IUnitOfWork uow)
+        {
+            //public IUnitOfWork _uow;
+            private readonly IChallengeRepository _challengeRepo;
+
+            public Handler(IChallengeRepository repo)
             {
-                _uow = uow;
+                _challengeRepo = repo;
             }
-            public async Task<ChallengeVM> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<ChallengeVM> Handle(Command command, CancellationToken cancellationToken)
             {
-                //map data to entity
-                var result = await _uow.Challenges.AddAsync(new Challenge { });
-                _uow.Complete();
+                Challenge challengeVM = new Challenge{ 
+                        Calories = command.createChallengeData.Calories,
+                        SplatPoints = command.createChallengeData.SplatPoints,
+                        AvgHr = command.createChallengeData.AvgHr,
+                        MaxHr = command.createChallengeData.MaxHr,
+                        Miles = command.createChallengeData.Miles,
+                        Steps = command.createChallengeData.Steps,
+                        DateCreated = DateTime.Now
+                        // memberID = memberID
+                };
+
+                var challenge = _challengeRepo.AddAsync(challengeVM);
+
+                ////map data to entity
+                //var result = await _uow.Challenges.AddAsync(new Challenge { });
+                //_uow.Complete();
+                //return new ChallengeVM();
+
                 return new ChallengeVM();
             }
         }

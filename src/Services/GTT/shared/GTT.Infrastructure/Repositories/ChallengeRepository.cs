@@ -1,8 +1,13 @@
 ﻿using Dapper;
 using GTT.Application;
 using GTT.Application.Repositories;
+using GTT.Application.ViewModels;
 using GTT.Domain.Entities;
+using GTT.Infrastructure.Data;
+using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
+using System.Net;
 
 namespace GTT.Infrastructure.Repositories
 {
@@ -10,37 +15,57 @@ namespace GTT.Infrastructure.Repositories
     {
         private readonly IDbConnection _connection;
         private readonly IDbTransaction _tran;
-        public ChallengeRepository(IDbConnection connection, IDbTransaction tran)
-        {
-            _connection = connection;
-            _tran = tran;
+
+        public ChallengeRepository(IDbConnectionFactory dbConnectionFactory) {
+            _connection = dbConnectionFactory.CreateConnection();
+            _tran = _connection.BeginTransaction();
         }
 
-        public async Task<int> AddAsync(Challenge entity)
+        public async Task<Challenge> AddAsync(Challenge challenge)
         {
-            var insertChallengeSql = @"
-                    INSERT INTO Challenge(field1, field2, field3)
-                    VALUES(@field1, @field2, @field3)
-                    SET @ChallengeId = SCOPE_IDENTITY()
-                    SELECT * FROM Challenge WHERE ChallengeId = @ChallengeId
-                ";
+            
+            try{
+                var insertChallengeSql = @"INSERT INTO Challenge(Calories, SplatPoints, AvgHr, MaxHr, Miles, Steps, DateCreated, memberID)
+                                        VALUES(@Calories, @SplatPoints, @AvgHr, @MaxHr, @Miles, @Steps, @DateCreated, @memberID)
+                                        DECLARE @challengeID int
+                                        SET @challengeID = SCOPE_IDENTITY()
+                                        SELECT* FROM Challenge WHERE ChallengeId = @ChallengeId
+                                        ";
 
-            var param = new
+                var param = new
+                {
+                    Calories = challenge.Calories,
+                    SplatPoints = challenge.SplatPoints,
+                    AvgHr = challenge.AvgHr,
+                    MaxHr = challenge.MaxHr,
+                    Miles = challenge.Miles,
+                    Steps = challenge.Steps,
+                    DateCreated = challenge.DateCreated,
+                    memberID = challenge.memberID
+                };
+
+                var result = await _connection.QuerySingleOrDefaultAsync<Challenge>(insertChallengeSql, param, _tran);
+
+                _tran.Commit();
+                return result;
+            }
+            catch (Exception ex)
             {
-                field1 = "entity.field1",
-                field2 = "entity.field2",
-                field3 = "entity.field3"
-            };
+                throw new Exception(ex.Message);
+            }
+            
 
-            var result = await _connection.ExecuteAsync(insertChallengeSql, param, transaction: _tran);
-
-            return result;
         }
 
         public async Task<int> DeleteAsync(int id)
         {
-            var insertChallengeSql = @"DELETE FROM Products WHERE Id = @Id";
-            var result = await _connection.ExecuteAsync(insertChallengeSql, new { Id = id }, _tran);
+            var insertChallengeSql = @"DELETE FROM Products WHERE Id = @Id and Age = @Age";
+            var dataToInsert = new { 
+                Id = id,
+                Name = "Huy",
+                Age = 18
+            };
+            var result = await _connection.ExecuteAsync(insertChallengeSql, dataToInsert);
 
             return result;
         }

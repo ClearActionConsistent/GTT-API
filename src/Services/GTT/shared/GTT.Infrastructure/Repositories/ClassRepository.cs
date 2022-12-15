@@ -22,7 +22,7 @@ namespace GTT.Infrastructure.Repositories
             _tran = tran;
         }
 
-        public async Task<int> AddAsync(Challenge entity)
+        public async Task<Challenge> AddAsync(Challenge entity)
         {
             var insertChallengeSql = @"
                     INSERT INTO Challenge(field1, field2, field3)
@@ -38,7 +38,7 @@ namespace GTT.Infrastructure.Repositories
                 field3 = "entity.field3"
             };
 
-            var result = await _connection.ExecuteAsync(insertChallengeSql, param, transaction: _tran);
+            var result = await _connection.QuerySingleOrDefaultAsync(insertChallengeSql, param, transaction: _tran);
             return result;
         }
 
