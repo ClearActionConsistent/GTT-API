@@ -1,8 +1,12 @@
-﻿using Dapper;
+﻿using AutoMapper;
+using Dapper;
 using GTT.Application;
 using GTT.Application.Repositories;
+using GTT.Application.Responses;
+using GTT.Application.ViewModels;
 using GTT.Domain.Entities;
 using System.Data;
+
 
 namespace GTT.Infrastructure.Repositories
 {
@@ -10,16 +14,18 @@ namespace GTT.Infrastructure.Repositories
     {
         private readonly IDbConnection _connection;
         private readonly IDbTransaction _tran = null;
+        private readonly IMapper _mapper;
 
         public ClassRepository(IDbConnectionFactory dbConnectionFactory)
         {
             _connection = dbConnectionFactory.CreateConnection();
             _tran = _connection.BeginTransaction();
+
         }
         public ClassRepository(IDbConnection dbConnection, IDbTransaction tran)
         {
             _connection = dbConnection;
-            _tran = tran;
+            _tran = tran;        
         }
 
         public async Task<int> AddAsync(Challenge entity)
@@ -68,6 +74,43 @@ namespace GTT.Infrastructure.Repositories
             var sql = @"UPDATE Challenge SET something equal something";
             var result = await _connection.ExecuteAsync(sql, entity, _tran);
             return result;
+        }
+
+        public async Task<ListResponse<ClassesVM>> GetListClassByActivity(int ActId)
+        {
+            try
+            {
+                var getId = @"SELECT * 
+                                FROM CLASS c
+                                    where c.ActId = @ActId";
+
+                var rsfromDb = (await _connection.QueryAsync(getId, new { ActId }, transaction: _tran)).FirstOrDefault();
+
+                if (rsfromDb == null)
+                {
+                    var error = new ListResponse<ClassesVM>
+                    {
+                            Message ="Class Invalid",
+                            HttpStatus =  404,
+                            Code = "Bad request"
+                    };
+                    return error;
+                }
+
+                var querySQl = @"SELECT * 
+                                    FROM CLASS c
+                                        WHERE  c.ActId = @ActId";
+
+                var result = new ListResponse<ClassesVM>
+                {
+                    DataDto = (await _connection.QueryAsync<ClassesVM>(querySQl, new { ActId }, transaction: _tran)).ToList()
+                };
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

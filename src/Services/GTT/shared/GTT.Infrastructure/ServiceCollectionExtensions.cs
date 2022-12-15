@@ -8,6 +8,9 @@ using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Thrive.Customers.Application.Queries;
+using AutoMapper;
+using GTT.Application.ViewModels;
+using GTT.Application.Queries;
 
 namespace GTT.Infrastructure;
 
@@ -18,6 +21,7 @@ public static class ServiceCollectionExtensions
         AddMediatR(services);
         AddServices(services);
         AddOptions(services);
+        AddMapper(services);
 
         return services;
     }
@@ -26,6 +30,9 @@ public static class ServiceCollectionExtensions
     {
         services.AddMediatR(typeof(GetClasses).Assembly);
         services.AddValidatorsFromAssembly(typeof(GetClasses).Assembly, includeInternalTypes: true);
+        services.AddMediatR(typeof(GetListClass).Assembly);
+        services.AddValidatorsFromAssembly(typeof(GetListClass).Assembly, includeInternalTypes: true);
+
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
     }
 
@@ -45,5 +52,10 @@ public static class ServiceCollectionExtensions
                 options.SqlConnectionString = configuration.GetValue<string>("SqlOptions:SqlConnectionString");
                 options.SqlUseAccessToken = configuration.GetValue<bool>("SqlOptions:SqlUseAccessToken");
             });
+    }
+
+    private static void AddMapper (IServiceCollection services)
+    {
+        services.AddAutoMapper(typeof(MapperProfile));
     }
 }
