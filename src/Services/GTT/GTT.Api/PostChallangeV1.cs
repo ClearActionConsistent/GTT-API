@@ -55,8 +55,9 @@ namespace GTT.API
                 int? maxHr = data?.maxHr;
                 int? miles = data?.miles;
                 int? steps = data?.steps;
-
-
+                int? memberID = data?.memberID;
+                DateTime? createdDate = data?.createdDate;
+                DateTime? updatedDate = data?.updatedDate;
 
                 var createChallengeData = new CreateChallengeData
                 {
@@ -66,6 +67,10 @@ namespace GTT.API
                     MaxHr = (int)maxHr,
                     Miles= (int)miles,
                     Steps= (int)steps,
+                    memberID = (int)memberID,
+                    CreatedDate = (DateTime)createdDate,
+                    UpdatedDate= (DateTime)updatedDate,
+
                 };
 
                 var command = new CreateChallange.Command(createChallengeData);

@@ -17,5 +17,11 @@ namespace GTT.Application.ViewModels
 
         public int Steps { get; set; }
 
+        public int memberID { get; set; }
+
+        public DateTime CreatedDate { get; set; }
+
+        public DateTime UpdatedDate { get; set; }
+
     }
 }

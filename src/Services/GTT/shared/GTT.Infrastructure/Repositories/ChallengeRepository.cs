@@ -25,36 +25,35 @@ namespace GTT.Infrastructure.Repositories
         {
             
             try{
-                var insertChallengeSql = @"INSERT INTO Challenge(Calories, SplatPoints, AvgHr, MaxHr, Miles, Steps, DateCreated, memberID)
-                                        VALUES(@Calories, @SplatPoints, @AvgHr, @MaxHr, @Miles, @Steps, @DateCreated, @memberID)
+                var insertChallengeSql = @"INSERT INTO Challenge(Calories, SplatPoints, AvgHR, MaxHR, Miles, Steps, MemberID, CreatedDate, UpdatedDate)
+                                        VALUES(@Calories, @SplatPoints, @AvgHR, @MaxHR, @Miles, @Steps, @MemberID, @CreatedDate, @UpdatedDate)
                                         DECLARE @challengeID int
                                         SET @challengeID = SCOPE_IDENTITY()
-                                        SELECT* FROM Challenge WHERE ChallengeId = @ChallengeId
+                                        SELECT* FROM Challenge WHERE challengeID = @ChallengeId
                                         ";
 
                 var param = new
                 {
                     Calories = challenge.Calories,
                     SplatPoints = challenge.SplatPoints,
-                    AvgHr = challenge.AvgHr,
-                    MaxHr = challenge.MaxHr,
+                    AvgHR = challenge.AvgHr,
+                    MaxHR = challenge.MaxHr,
                     Miles = challenge.Miles,
                     Steps = challenge.Steps,
-                    DateCreated = challenge.DateCreated,
-                    memberID = challenge.memberID
+                    MemberID = challenge.memberID,
+                    CreatedDate = challenge.CreatedDate,
+                    UpdatedDate = challenge.UpdatedDate,            
                 };
 
                 var result = await _connection.QuerySingleOrDefaultAsync<Challenge>(insertChallengeSql, param, _tran);
-
                 _tran.Commit();
                 return result;
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                _tran.Rollback();
+                throw new Exception();
             }
-            
-
         }
 
         public async Task<int> DeleteAsync(int id)

@@ -62,8 +62,10 @@ namespace GTT.Application.Commands
                         MaxHr = command.createChallengeData.MaxHr,
                         Miles = command.createChallengeData.Miles,
                         Steps = command.createChallengeData.Steps,
-                        DateCreated = DateTime.Now
-                        // memberID = memberID
+                        memberID = command.createChallengeData.memberID,
+                        CreatedDate = command.createChallengeData.CreatedDate,
+                        UpdatedDate = DateTime.Now,
+                        
                 };
 
                 var challenge = _challengeRepo.AddAsync(challengeVM);

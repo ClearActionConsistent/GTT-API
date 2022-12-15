@@ -2,8 +2,6 @@
 {
     public class ChallengeVM
     {
-        public int challengeID { get; set; }
-
         public int Calories { get; set; }
 
         public int SplatPoints { get; set; }
@@ -18,6 +16,9 @@
 
         public int memberID { get; set; }
 
-        public DateTime DateCreated { get; set; }
+        public DateTime CreatedDate { get; set; }
+        
+        public DateTime UpdatedDate { get; set; }
+
     }
 }

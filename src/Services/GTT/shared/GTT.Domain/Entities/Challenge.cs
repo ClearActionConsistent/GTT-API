@@ -24,6 +24,9 @@ namespace GTT.Domain.Entities
 
         public int memberID { get; set; }
 
-        public DateTime DateCreated { get; set; }
+        public DateTime CreatedDate { get; set; }
+
+        public DateTime UpdatedDate { get; set; }
+
     }
 }
