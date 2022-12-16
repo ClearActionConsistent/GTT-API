@@ -17,8 +17,8 @@ namespace GTT.Application.Queries
             public Validator()
             {
                 RuleFor(x => x.activityId)
-                    .NotEmpty().WithMessage("Activity not null")
-                    .NotNull().WithMessage("Activity not null");
+                    .NotNull().WithMessage("Id can not be null")
+                    .GreaterThanOrEqualTo(1).WithMessage("Id must be greater than 0");
             }
         }
 
