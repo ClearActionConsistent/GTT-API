@@ -3,7 +3,7 @@
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
-    "SqlOptions__SqlConnectionString": "Data Source=VPHUDUC;Initial Catalog= GTT; database = GTT; User ID=sa;Password=123456",
+    "SqlOptions__SqlConnectionString": "Data Source=abc;Initial Catalog= GTT; database = GTT; User ID=fffffff;Password=fffff",
     "SqlOptions__SqlUseAccessToken": "false"
   }
 }
