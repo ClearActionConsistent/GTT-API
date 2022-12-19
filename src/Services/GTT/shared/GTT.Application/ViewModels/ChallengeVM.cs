@@ -2,6 +2,8 @@
 {
     public class ChallengeVM : BaseVM
     {
+        public int challengeID { get; set; }
+
         public int Calories { get; set; }
 
         public int SplatPoints { get; set; }

@@ -54,39 +54,106 @@ namespace GTT.Infrastructure.Repositories
 
         public async Task<int> DeleteAsync(int id)
         {
-            var insertChallengeSql = @"DELETE FROM Products WHERE Id = @Id and Age = @Age";
-            var dataToInsert = new { 
-                Id = id,
-                Name = "Huy",
-                Age = 18
-            };
-            var result = await _connection.ExecuteAsync(insertChallengeSql, dataToInsert);
+            try
+            {
+                var deleteChallengeSql = @"DELETE FROM Challenge WHERE challengeId = @Id";
+                var param = new
+                {
+                    Id = id
+                };
+                var result = await _connection.ExecuteAsync(deleteChallengeSql, param);
 
-            return result;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            
         }
 
         public async Task<IReadOnlyList<Challenge>> GetAllAsync()
         {
-            var insertChallengeSql = @"SELECT * FROM Challenge";
-            var result = await _connection.QueryAsync<Challenge>(insertChallengeSql, _tran);
+            try
+            {
+                var getAllChallengeSql = @"SELECT * FROM Challenge";
+                var result = await _connection.QueryAsync<Challenge>(getAllChallengeSql, _tran);
 
-            return result.ToList();
+                return result.ToList();
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<IReadOnlyList<ChallengeVM>> GetAllPagingAsync(int pageindex, int pagesize)
+        {
+            try
+            {
+                var getAllPagingChallengeSql = @"DECLARE @PageNumber AS INT, @RowspPage AS INT
+                                    SET @PageNumber = @pageIndex
+                                    SET @RowspPage = @pageSize
+                                    SELECT *
+                                    FROM Challenge
+                                    ORDER BY challengeID
+                                    OFFSET ((@PageNumber - 1) * @RowspPage) ROWS
+                                    FETCH NEXT @RowspPage ROWS ONLY;";
+
+                var param = new
+                {
+                    pageIndex = pageindex,
+                    pageSize = pagesize
+                };
+
+                var result = await _connection.QueryAsync<ChallengeVM>(getAllPagingChallengeSql, param, _tran);
+
+                return result.ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            
         }
 
         public async Task<Challenge> GetByIdAsync(int id)
         {
-            var insertChallengeSql = @"SELECT * FROM Challenge WHERE Id = @Id";
-            var result = await _connection.QuerySingleOrDefaultAsync<Challenge>(insertChallengeSql, new { Id = id }, _tran);
+            try
+            {
+                var getByIDChallengeSql = @"SELECT * FROM Challenge WHERE challengeId = @Id";
 
-            return result;
+                var result = await _connection.QuerySingleOrDefaultAsync<Challenge>(getByIDChallengeSql, new { Id = id }, _tran);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<int> UpdateAsync(Challenge entity)
         {
-            var sql = @"UPDATE Challenge SET something equal something";
-            var result = await _connection.ExecuteAsync(sql, entity, _tran);
+            try
+            {
+                var updateChallengeSql = @"UPDATE Challenge SET something equal something";
 
-            return result;
+                var param = new
+                {
+                    
+                };
+
+                var result = await _connection.ExecuteAsync(updateChallengeSql, param, _tran);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
+
     }
 }

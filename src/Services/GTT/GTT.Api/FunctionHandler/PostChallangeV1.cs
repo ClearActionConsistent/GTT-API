@@ -12,7 +12,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using System.Net;
 
-namespace GTT.API
+namespace GTT_API.FunctionHandler
 {
     public class PostChallengeV1
     {
@@ -27,14 +27,14 @@ namespace GTT.API
 
         [Function("PostChallenge")]
         [OpenApiSecurity("bearer_auth", SecuritySchemeType.Http, Scheme = OpenApiSecuritySchemeType.Bearer, BearerFormat = "JWT")]
-        [OpenApiOperation(nameof(PostChallengeV1), "Test Challenge", Summary = "Search list of tags by search terms", Description = "Search list of tags by search terms",
+        [OpenApiOperation(nameof(PostChallengeV1), "Test Challenge", Summary = "Insert New Challenge", Description = "Insert New Challenge",
             Visibility = OpenApiVisibilityType.Advanced)]
 
         [OpenApiRequestBody("application/json", typeof(CreateChallengeData), Description = "Json request body containing")]
         [OpenApiResponseWithBody(HttpStatusCode.Created, "application/json", typeof(List<string>))]
         [OpenApiResponseWithBody(HttpStatusCode.BadRequest, "application/json", typeof(IEnumerable<ValidationFailure>))]
         [OpenApiResponseWithoutBody(HttpStatusCode.InternalServerError, Description = "Internal Server Error.")]
-        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/createChallenge")]  HttpRequestData req)
+        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/createChallenge")] HttpRequestData req)
         {
             try
             {
@@ -60,11 +60,11 @@ namespace GTT.API
                     SplatPoints = (int)splatPoints,
                     AvgHr = (int)avgHr,
                     MaxHr = (int)maxHr,
-                    Miles= (int)miles,
-                    Steps= (int)steps,
+                    Miles = (int)miles,
+                    Steps = (int)steps,
                     memberID = (int)memberID,
                     CreatedDate = (DateTime)createdDate,
-                    UpdatedDate= (DateTime)updatedDate,
+                    UpdatedDate = (DateTime)updatedDate,
 
                 };
 
@@ -76,19 +76,19 @@ namespace GTT.API
                 return response;
 
             }
-            catch(ValidationException ex)
+            catch (ValidationException ex)
             {
                 var responseUnauthorized = req.CreateResponse(HttpStatusCode.BadRequest);
                 await responseUnauthorized.WriteAsJsonAsync(ex.Errors, HttpStatusCode.BadRequest);
                 return responseUnauthorized;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 var response = req.CreateResponse(HttpStatusCode.InternalServerError);
                 await response.WriteStringAsync("Unhandle exception has occured");
                 return response;
             }
-            
+
         }
     }
 }

@@ -7,6 +7,7 @@ namespace GTT.Application.Repositories
     {
         Task<T> GetByIdAsync(int id);
         Task<IReadOnlyList<T>> GetAllAsync();
+        Task<IReadOnlyList<ChallengeVM>> GetAllPagingAsync(int pageindex, int pagesize);
         Task<ChallengeVM> AddAsync(ChallengeVM challenge);
         Task<int> DeleteAsync(int id);
         Task<int> UpdateAsync(T entity);
