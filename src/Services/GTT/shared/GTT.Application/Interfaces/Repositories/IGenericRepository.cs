@@ -1,4 +1,5 @@
-﻿using GTT.Domain.Entities;
+﻿using GTT.Application.ViewModels;
+using GTT.Domain.Entities;
 
 namespace GTT.Application.Repositories
 {
@@ -6,7 +7,7 @@ namespace GTT.Application.Repositories
     {
         Task<T> GetByIdAsync(int id);
         Task<IReadOnlyList<T>> GetAllAsync();
-        Task<Challenge> AddAsync(T challenge);
+        Task<ChallengeVM> AddAsync(ChallengeVM challenge);
         Task<int> DeleteAsync(int id);
         Task<int> UpdateAsync(T entity);
     }

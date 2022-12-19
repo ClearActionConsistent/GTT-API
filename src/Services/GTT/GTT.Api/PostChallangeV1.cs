@@ -1,13 +1,8 @@
-using System.Collections.Generic;
-using System.Net;
 using FluentValidation;
 using FluentValidation.Results;
-using GTT.Api.Configuration;
 using GTT.Application.Commands;
 using GTT.Application.ViewModels;
-using GTT.Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
@@ -15,7 +10,7 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
-using Thrive.Customers.Application.Queries;
+using System.Net;
 
 namespace GTT.API
 {
@@ -26,20 +21,20 @@ namespace GTT.API
 
         public PostChallengeV1(ILoggerFactory loggerFactory, IMediator mediator)
         {
-            _logger = loggerFactory.CreateLogger<GetClassesV1>();
+            _logger = loggerFactory.CreateLogger<PostChallengeV1>();
             _mediator = mediator;
         }
 
         [Function("PostChallenge")]
         [OpenApiSecurity("bearer_auth", SecuritySchemeType.Http, Scheme = OpenApiSecuritySchemeType.Bearer, BearerFormat = "JWT")]
-        [OpenApiOperation(nameof(GetClassesV1), "Test Challenge", Summary = "Search list of tags by search terms", Description = "Search list of tags by search terms",
+        [OpenApiOperation(nameof(PostChallengeV1), "Test Challenge", Summary = "Search list of tags by search terms", Description = "Search list of tags by search terms",
             Visibility = OpenApiVisibilityType.Advanced)]
 
         [OpenApiRequestBody("application/json", typeof(CreateChallengeData), Description = "Json request body containing")]
         [OpenApiResponseWithBody(HttpStatusCode.Created, "application/json", typeof(List<string>))]
         [OpenApiResponseWithBody(HttpStatusCode.BadRequest, "application/json", typeof(IEnumerable<ValidationFailure>))]
         [OpenApiResponseWithoutBody(HttpStatusCode.InternalServerError, Description = "Internal Server Error.")]
-        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/createChallenge")]  HttpRequestData req, ILogger log)
+        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/createChallenge")]  HttpRequestData req)
         {
             try
             {
@@ -76,8 +71,7 @@ namespace GTT.API
                 var command = new CreateChallange.Command(createChallengeData);
                 var challenge = await _mediator.Send(command);
                 var response = req.CreateResponse(HttpStatusCode.OK);
-                response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
-                response.WriteString("Welcome to Azure Functions!");
+                await response.WriteAsJsonAsync(challenge, HttpStatusCode.OK);
 
                 return response;
 

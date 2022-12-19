@@ -6,7 +6,7 @@ using System.Data;
 
 namespace GTT.Infrastructure.Repositories
 {
-    public class ClassRepository : IClassRepository
+    public class ClassRepository
     {
         private readonly IDbConnection _connection;
         private readonly IDbTransaction _tran = null;

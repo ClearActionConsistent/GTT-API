@@ -55,7 +55,7 @@ namespace GTT.Application.Commands
             }
             public async Task<ChallengeVM> Handle(Command command, CancellationToken cancellationToken)
             {
-                Challenge challengeVM = new Challenge{ 
+                ChallengeVM challengeVM = new ChallengeVM{ 
                         Calories = command.createChallengeData.Calories,
                         SplatPoints = command.createChallengeData.SplatPoints,
                         AvgHr = command.createChallengeData.AvgHr,
@@ -64,18 +64,12 @@ namespace GTT.Application.Commands
                         Steps = command.createChallengeData.Steps,
                         memberID = command.createChallengeData.memberID,
                         CreatedDate = command.createChallengeData.CreatedDate,
-                        UpdatedDate = DateTime.Now,
+                        UpdatedDate = command.createChallengeData.UpdatedDate,
                         
                 };
 
                 var challenge = _challengeRepo.AddAsync(challengeVM);
-
-                ////map data to entity
-                //var result = await _uow.Challenges.AddAsync(new Challenge { });
-                //_uow.Complete();
-                //return new ChallengeVM();
-
-                return new ChallengeVM();
+                return await challenge;
             }
         }
     }

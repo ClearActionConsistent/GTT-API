@@ -2,7 +2,7 @@
 
 namespace GTT.Application.ViewModels
 {
-    public class CreateChallengeData
+    public class CreateChallengeData : BaseVM
     {
 
         public int Calories { get; set; }
@@ -18,10 +18,5 @@ namespace GTT.Application.ViewModels
         public int Steps { get; set; }
 
         public int memberID { get; set; }
-
-        public DateTime CreatedDate { get; set; }
-
-        public DateTime UpdatedDate { get; set; }
-
     }
 }

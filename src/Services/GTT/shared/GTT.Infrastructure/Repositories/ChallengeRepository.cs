@@ -3,11 +3,7 @@ using GTT.Application;
 using GTT.Application.Repositories;
 using GTT.Application.ViewModels;
 using GTT.Domain.Entities;
-using GTT.Infrastructure.Data;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using System.Net;
 
 namespace GTT.Infrastructure.Repositories
 {
@@ -21,7 +17,7 @@ namespace GTT.Infrastructure.Repositories
             _tran = _connection.BeginTransaction();
         }
 
-        public async Task<Challenge> AddAsync(Challenge challenge)
+        public async Task<ChallengeVM> AddAsync(ChallengeVM challenge)
         {
             
             try{
@@ -45,7 +41,7 @@ namespace GTT.Infrastructure.Repositories
                     UpdatedDate = challenge.UpdatedDate,            
                 };
 
-                var result = await _connection.QuerySingleOrDefaultAsync<Challenge>(insertChallengeSql, param, _tran);
+                var result = await _connection.QuerySingleOrDefaultAsync<ChallengeVM>(insertChallengeSql, param, _tran);
                 _tran.Commit();
                 return result;
             }
