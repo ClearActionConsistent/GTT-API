@@ -40,7 +40,7 @@ namespace GTT_API.FunctionHandler
                 _logger.LogInformation("C# HTTP Trigger function CreateExcerciseGroup request.");
                 var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 var data = JsonConvert.DeserializeObject<ExGroupRequestModel>(requestBody);
-                var result = await _mediator.Send(new CreatExGroup.Command(data));
+                var result = await _mediator.Send(new CreateExGroup.Command(data));
                 var respone = req.CreateResponse();
                 await respone.WriteAsJsonAsync(result, result.Status == HttpStatusCode.OK ? HttpStatusCode.OK : HttpStatusCode.BadRequest);
 

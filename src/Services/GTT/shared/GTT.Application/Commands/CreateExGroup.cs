@@ -8,7 +8,7 @@ using System.Net;
 
 namespace GTT.Application.Commands
 {
-    public class CreatExGroup
+    public class CreateExGroup
     {
         public record Command(
         ExGroupRequestModel data
