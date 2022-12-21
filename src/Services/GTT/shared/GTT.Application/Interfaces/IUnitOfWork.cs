@@ -1,6 +1,4 @@
-﻿using GTT.Application.Interfaces.Repositories;
-
-namespace GTT.Application.Repositories
+﻿namespace GTT.Application.Repositories
 {
     public interface IUnitOfWork
     {
