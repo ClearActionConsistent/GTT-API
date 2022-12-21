@@ -1,14 +1,16 @@
 ﻿using GTT.Application;
+using GTT.Application.Interfaces.Repositories;
 using GTT.Application.Repositories;
 using GTT.Infrastructure.Repositories;
 using System.Data;
 
 namespace GTT.Infrastructure
 {
-    public class UnitOfWork: IUnitOfWork, IDisposable
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly IDbConnection _connection;
         private readonly IDbTransaction _tran;
+
         public UnitOfWork(IDbConnectionFactory dbConnectionFactory)
         {
             _connection = dbConnectionFactory.CreateConnection();
@@ -29,7 +31,7 @@ namespace GTT.Infrastructure
 
         public void Dispose()
         {
-            _tran?.Rollback();
+            _tran?.Dispose();
             _connection?.Close();
         }
 
