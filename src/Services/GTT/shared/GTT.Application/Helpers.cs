@@ -1,6 +1,6 @@
-﻿namespace GTT.Domain.Enums
+﻿namespace GTT.Application
 {
-    public class Helper
+    public class Helpers
     {
         public static string BuildErrorMessage(Exception ex)
         {

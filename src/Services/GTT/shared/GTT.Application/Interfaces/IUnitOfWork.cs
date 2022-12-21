@@ -6,7 +6,6 @@ namespace GTT.Application.Repositories
     {
         IChallengeRepository Challenges { get; }
         IClassRepository Classes { get; }
-        IExGroupRepository ExGroup { get; }
         void Complete();
         void Rollback();
     }

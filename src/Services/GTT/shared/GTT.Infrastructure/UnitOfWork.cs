@@ -18,12 +18,10 @@ namespace GTT.Infrastructure
 
             Challenges = new ChallengeRepository(_connection, _tran);
             Classes = new ClassRepository(_connection, _tran);
-            ExGroup = new ExGroupRepository(_connection, _tran);
         }
 
         public IChallengeRepository Challenges { get; private set; }
         public IClassRepository Classes { get; private set; }
-        public IExGroupRepository ExGroup { get; private set; }
 
         public void Complete()
         {

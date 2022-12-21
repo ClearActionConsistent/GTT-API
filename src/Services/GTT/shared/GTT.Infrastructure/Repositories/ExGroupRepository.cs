@@ -3,7 +3,6 @@ using Dapper;
 using GTT.Application.Interfaces.Repositories;
 using GTT.Application.Requests;
 using GTT.Application;
-using GTT.Domain.Enums;
 
 namespace GTT.Infrastructure.Repositories
 {
@@ -11,20 +10,17 @@ namespace GTT.Infrastructure.Repositories
     {
         #region Private Members
         private readonly IDbConnection _connection;
-        private readonly IDbTransaction _tran;
         #endregion
 
         #region Constructors
         public ExGroupRepository(IDbConnectionFactory dbConnectionFactory)
         {
             _connection = dbConnectionFactory.CreateConnection();
-            _tran = _connection.BeginTransaction();
         }
         
-        public ExGroupRepository(IDbConnection connection, IDbTransaction tran)
+        public ExGroupRepository(IDbConnection connection)
         {
             _connection = connection;
-            _tran = tran;
         }
         #endregion
 
@@ -45,13 +41,13 @@ namespace GTT.Infrastructure.Repositories
                 queryParameters.Add("@phone", request.Phone);
                 queryParameters.Add("@isActive", request.IsActive);
 
-                var result = await _connection.ExecuteAsync(query, queryParameters, transaction: _tran);
+                var result = await _connection.ExecuteAsync(query, queryParameters);
 
                 return result;
             }
             catch (Exception ex)
             {
-                var error = $"ExGroupRepository - {Helper.BuildErrorMessage(ex)}";
+                var error = $"ExGroupRepository - {Helpers.BuildErrorMessage(ex)}";
                 throw new Exception(error);
             }
         }

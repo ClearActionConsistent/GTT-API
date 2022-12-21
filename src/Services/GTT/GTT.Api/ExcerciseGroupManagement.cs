@@ -10,9 +10,9 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
-using GTT.Domain.Enums;
+using GTT.Application;
 
-namespace GTT_API.FunctionHandler
+namespace GTT_API
 {
     public class ExcerciseGroupManagement
     {
@@ -48,7 +48,7 @@ namespace GTT_API.FunctionHandler
             }
             catch (ValidationException ex)
             {
-                var error = $"[AzureFunction] CreateExcerciseGroup - {Helper.BuildErrorMessage(ex)}";
+                var error = $"[AzureFunction] CreateExcerciseGroup - {Helpers.BuildErrorMessage(ex)}";
                 _logger.LogError(error);
                 var response = req.CreateResponse();
                 await response.WriteAsJsonAsync(error, HttpStatusCode.InternalServerError);
@@ -56,7 +56,7 @@ namespace GTT_API.FunctionHandler
             }
             catch (Exception ex)
             {
-                var error = $"[AzureFunction] CreateExcerciseGroup - {Helper.BuildErrorMessage(ex)}";
+                var error = $"[AzureFunction] CreateExcerciseGroup - {Helpers.BuildErrorMessage(ex)}";
                 _logger.LogError(error);
                 var response = req.CreateResponse();
                 await response.WriteAsJsonAsync(error, HttpStatusCode.InternalServerError);

@@ -1,10 +1,9 @@
 using FluentValidation;
-using GTT.Application.Repositories;
 using GTT.Application.Requests;
 using GTT.Application.Response;
-using GTT.Domain.Enums;
 using MediatR;
 using System.Net;
+using GTT.Application.Interfaces.Repositories;
 
 namespace GTT.Application.Commands
 {
@@ -50,11 +49,11 @@ namespace GTT.Application.Commands
 
         internal class Handler : IRequestHandler<Command, BaseResponseModel>
         {
-            private IUnitOfWork _uow;
+            private IExGroupRepository _exGroupRepository;
 
-            public Handler(IUnitOfWork uow)
+            public Handler(IExGroupRepository exGroupRepository)
             {
-                _uow = uow;
+                _exGroupRepository = exGroupRepository;
             }
 
             public async Task<BaseResponseModel> Handle(Command command, CancellationToken cancellationToken)
@@ -62,21 +61,17 @@ namespace GTT.Application.Commands
                 try
                 {
                     //handle request command to create excercise group information
-                    var result = await _uow.ExGroup.CreateExGroup(command.data);
+                    var result = await _exGroupRepository.CreateExGroup(command.data);
                     if (result >= 0)
                     {
-                        _uow.Complete();
                         return new BaseResponseModel(HttpStatusCode.OK, "Success");
                     }
-                    else
-                    {
-                        _uow.Rollback();
-                        return new BaseResponseModel(HttpStatusCode.BadRequest, "Failed to create excercise group");
-                    }
+
+                    return new BaseResponseModel(HttpStatusCode.BadRequest, "Failed to create excercise group");
                 }
                 catch (Exception ex)
                 {
-                    var error = $"[Handle] CreateExGroup - {Helper.BuildErrorMessage(ex)}";
+                    var error = $"[Handle] CreateExGroup - {Helpers.BuildErrorMessage(ex)}";
                     throw new Exception(error);
                 }
             }
