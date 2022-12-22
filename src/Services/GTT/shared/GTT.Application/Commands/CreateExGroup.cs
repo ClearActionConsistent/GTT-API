@@ -58,22 +58,14 @@ namespace GTT.Application.Commands
 
             public async Task<BaseResponseModel> Handle(Command command, CancellationToken cancellationToken)
             {
-                try
+                //handle request command to create excercise group information
+                var result = await _exGroupRepository.CreateExGroup(command.data);
+                if (result >= 0)
                 {
-                    //handle request command to create excercise group information
-                    var result = await _exGroupRepository.CreateExGroup(command.data);
-                    if (result >= 0)
-                    {
-                        return new BaseResponseModel(HttpStatusCode.OK, "Success");
-                    }
+                    return new BaseResponseModel(HttpStatusCode.OK, "Success");
+                }
 
-                    return new BaseResponseModel(HttpStatusCode.BadRequest, "Failed to create excercise group");
-                }
-                catch (Exception ex)
-                {
-                    var error = $"[Handle] CreateExGroup - {Helpers.BuildErrorMessage(ex)}";
-                    throw new Exception(error);
-                }
+                return new BaseResponseModel(HttpStatusCode.BadRequest, "Failed to create excercise group");
             }
         }
     }
