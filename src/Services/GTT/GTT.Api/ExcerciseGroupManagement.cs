@@ -33,6 +33,7 @@ namespace GTT_API
         [Function("CreateExcerciseGroup")]
         [OpenApiOperation(nameof(ExcerciseGroupManagement), "Excercise")]
         [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(ExGroupRequestModel), Required = true)]
+        [OpenApiResponseWithoutBody(HttpStatusCode.InternalServerError, Description = "Internal Server Error.")]
         public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Routes.CreateExGroup)] HttpRequestData req)
         {
             try
