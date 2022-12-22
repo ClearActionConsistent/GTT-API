@@ -48,6 +48,11 @@ namespace GTT.Application.Commands
                 //handle request command to create class information
                 var result = await _classRepository.CreateClass(command.data);
 
+                if (result.Status == HttpStatusCode.OK)
+                {
+                    return new BaseResponseModel(HttpStatusCode.OK, "Success", result.Dto);
+                }
+
                 if (result.Status == HttpStatusCode.NotFound)
                 {
                     return new BaseResponseModel(HttpStatusCode.NotFound, result.Message);

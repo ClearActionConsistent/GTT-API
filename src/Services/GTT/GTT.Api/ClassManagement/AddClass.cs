@@ -1,5 +1,6 @@
 using System.Net;
 using FluentValidation;
+using GTT.Api.Configuration;
 using GTT.Application.Commands;
 using GTT.Application.Requests;
 using MediatR;
@@ -11,6 +12,7 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using GTT.Application;
 using GTT.Application.Response;
+using FluentValidation.Results;
 
 namespace GTT_API.ClassManagement
 {
