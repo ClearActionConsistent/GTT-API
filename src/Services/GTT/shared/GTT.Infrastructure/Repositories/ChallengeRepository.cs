@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using GTT.Application;
 using GTT.Application.Repositories;
+using GTT.Application.ViewModels;
 using GTT.Domain.Entities;
 using System.Data;
 
@@ -10,63 +11,48 @@ namespace GTT.Infrastructure.Repositories
     {
         private readonly IDbConnection _connection;
         private readonly IDbTransaction _tran;
-        public ChallengeRepository(IDbConnection connection, IDbTransaction tran)
+
+        public ChallengeRepository(IDbConnectionFactory dbConnectionFactory)
         {
-            _connection = connection;
-            _tran = tran;
+            _connection = dbConnectionFactory.CreateConnection();
+            _tran = _connection.BeginTransaction();
         }
 
-        public async Task<int> AddAsync(Challenge entity)
+        public async Task<ChallengeVM> AddAsync(ChallengeVM challenge)
         {
-            var insertChallengeSql = @"
-                    INSERT INTO Challenge(field1, field2, field3)
-                    VALUES(@field1, @field2, @field3)
-                    SET @ChallengeId = SCOPE_IDENTITY()
-                    SELECT * FROM Challenge WHERE ChallengeId = @ChallengeId
-                ";
-
-            var param = new
+            try
             {
-                field1 = "entity.field1",
-                field2 = "entity.field2",
-                field3 = "entity.field3"
-            };
+                var insertChallengeSql = @"INSERT INTO Challenge(Calories, SplatPoints, AvgHR, MaxHR, Miles, Steps, MemberID, ClassID, CreatedDate, UpdatedDate)
+                                    VALUES(@Calories, @SplatPoints, @AvgHR, @MaxHR, @Miles, @Steps, @MemberID, @ClassID, @CreatedDate, @UpdatedDate)
+                                    DECLARE @challengeID int
+                                    SET @challengeID = SCOPE_IDENTITY()
+                                    SELECT* FROM Challenge WHERE challengeID = @ChallengeId
+                                    ";
 
-            var result = await _connection.ExecuteAsync(insertChallengeSql, param, transaction: _tran);
+                var param = new
+                {
+                    Calories = challenge.Calories,
+                    SplatPoints = challenge.SplatPoints,
+                    AvgHR = challenge.AvgHr,
+                    MaxHR = challenge.MaxHr,
+                    Miles = challenge.Miles,
+                    Steps = challenge.Steps,
+                    MemberID = challenge.memberID,
+                    ClassID = challenge.classID,
+                    CreatedDate = challenge.CreatedDate,
+                    UpdatedDate = challenge.UpdatedDate,
+                };
 
-            return result;
-        }
-
-        public async Task<int> DeleteAsync(int id)
-        {
-            var insertChallengeSql = @"DELETE FROM Products WHERE Id = @Id";
-            var result = await _connection.ExecuteAsync(insertChallengeSql, new { Id = id }, _tran);
-
-            return result;
-        }
-
-        public async Task<IReadOnlyList<Challenge>> GetAllAsync()
-        {
-            var insertChallengeSql = @"SELECT * FROM Challenge";
-            var result = await _connection.QueryAsync<Challenge>(insertChallengeSql, _tran);
-
-            return result.ToList();
-        }
-
-        public async Task<Challenge> GetByIdAsync(int id)
-        {
-            var insertChallengeSql = @"SELECT * FROM Challenge WHERE Id = @Id";
-            var result = await _connection.QuerySingleOrDefaultAsync<Challenge>(insertChallengeSql, new { Id = id }, _tran);
-
-            return result;
-        }
-
-        public async Task<int> UpdateAsync(Challenge entity)
-        {
-            var sql = @"UPDATE Challenge SET something equal something";
-            var result = await _connection.ExecuteAsync(sql, entity, _tran);
-
-            return result;
+                var result = await _connection.QuerySingleOrDefaultAsync<ChallengeVM>(insertChallengeSql, param, _tran);
+                _tran.Commit();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _tran.Rollback();
+                throw new Exception(ex.Message);
+            }
+            
         }
     }
 }

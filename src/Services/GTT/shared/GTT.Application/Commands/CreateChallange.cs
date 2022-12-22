@@ -1,8 +1,10 @@
 using FluentValidation;
 using GTT.Application.Repositories;
+using GTT.Application.Response;
 using GTT.Application.ViewModels;
 using GTT.Domain.Entities;
 using MediatR;
+using System.Net;
 
 namespace GTT.Application.Commands
 {
@@ -10,32 +12,77 @@ namespace GTT.Application.Commands
     {
         public record Command(
         CreateChallengeData createChallengeData
-        ) : IRequest<ChallengeVM>;
+        ) : IRequest<BaseResponseModel>;
 
         internal class Validator : AbstractValidator<Command>
         {
             public Validator()
             {
-                RuleFor(x => x.createChallengeData.Name)
-                     .NotNull().WithMessage("Challege name is required")
-                     .NotEmpty().WithMessage("Challege name is not empty");
+                RuleFor(x => x.createChallengeData.Calories)
+                     .NotNull().WithMessage("Challege Calories is required")
+                     .NotEmpty().WithMessage("Challege Calories is not empty");
+
+                RuleFor(x => x.createChallengeData.SplatPoints)
+                     .NotNull().WithMessage("Challege SplatPoints is required")
+                     .NotEmpty().WithMessage("Challege SplatPoints is not empty");
+
+                RuleFor(x => x.createChallengeData.AvgHr)
+                     .NotNull().WithMessage("Challege Avg Hr is required")
+                     .NotEmpty().WithMessage("Challege Avg Hr is not empty");
+
+
+                RuleFor(x => x.createChallengeData.MaxHr)
+                     .NotNull().WithMessage("Challege Max Hr is required")
+                     .NotEmpty().WithMessage("Challege Max Hr is not empty");
+
+                RuleFor(x => x.createChallengeData.Miles)
+                     .NotNull().WithMessage("Challege Miles is required")
+                     .NotEmpty().WithMessage("Challege Miles is not empty");
+
+                RuleFor(x => x.createChallengeData.Steps)
+                     .NotNull().WithMessage("Challege Steps is required")
+                     .NotEmpty().WithMessage("Challege Steps is not empty");
+
+                RuleFor(x => x.createChallengeData.memberID)
+                     .NotNull().WithMessage("Member ID is required")
+                     .NotEmpty().WithMessage("Member ID is not empty");
+
+                RuleFor(x => x.createChallengeData.classID)
+                    .NotNull().WithMessage("Class ID is required")
+                    .NotEmpty().WithMessage("Class ID is not empty");
             }
         }
 
-        internal class Handler : IRequestHandler<Command, ChallengeVM>
+        internal class Handler : IRequestHandler<Command, BaseResponseModel>
         {
-            public IUnitOfWork _uow;
+            private readonly IChallengeRepository _challengeRepo;
 
-            public Handler(IUnitOfWork uow)
+            public Handler(IChallengeRepository repo)
             {
-                _uow = uow;
+                _challengeRepo = repo;
             }
-            public async Task<ChallengeVM> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<BaseResponseModel> Handle(Command command, CancellationToken cancellationToken)
             {
-                //map data to entity
-                var result = await _uow.Challenges.AddAsync(new Challenge { });
-                _uow.Complete();
-                return new ChallengeVM();
+
+                ChallengeVM challengeVM = new ChallengeVM
+                {
+                    Calories = command.createChallengeData.Calories,
+                    SplatPoints = command.createChallengeData.SplatPoints,
+                    AvgHr = command.createChallengeData.AvgHr,
+                    MaxHr = command.createChallengeData.MaxHr,
+                    Miles = command.createChallengeData.Miles,
+                    Steps = command.createChallengeData.Steps,
+                    memberID = command.createChallengeData.memberID,
+                    classID = command.createChallengeData.classID,
+                    CreatedDate = command.createChallengeData.CreatedDate,
+                    UpdatedDate = command.createChallengeData.UpdatedDate,
+
+                };
+
+                var challenge = await _challengeRepo.AddAsync(challengeVM);
+
+                return new BaseResponseModel(HttpStatusCode.OK, "Success",challenge);
+                
             }
         }
     }

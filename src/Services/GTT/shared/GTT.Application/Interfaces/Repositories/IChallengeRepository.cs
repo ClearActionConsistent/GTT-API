@@ -1,9 +1,11 @@
-﻿using GTT.Domain.Entities;
+﻿
+using GTT.Application.ViewModels;
+using GTT.Domain.Entities;
 
 namespace GTT.Application.Repositories
 {
-    public interface IChallengeRepository: IGenericRepository<Challenge>
+    public interface IChallengeRepository
     {
-
+        Task<ChallengeVM> AddAsync(ChallengeVM challengeVM);
     }
 }
