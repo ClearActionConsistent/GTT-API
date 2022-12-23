@@ -113,7 +113,7 @@ namespace GTT.Infrastructure.Repositories
 
                 _tran.Commit();
 
-                return new BaseResponseModel(HttpStatusCode.OK, "Success"); ;
+                return new BaseResponseModel(HttpStatusCode.OK, "Success");
             }
             catch(Exception ex)
             {
