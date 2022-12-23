@@ -12,11 +12,10 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using GTT.Application;
 using GTT.Application.Response;
-using FluentValidation.Results;
 
-namespace GTT_API
+namespace GTT_API.ExcerciseGroupManagement
 {
-    public class ExcerciseGroupManagement
+    public class CreateExcerciseGroup
     {
         #region Private Members
         private readonly ILogger _logger;
@@ -24,21 +23,21 @@ namespace GTT_API
         #endregion
 
         #region Constructors
-        public ExcerciseGroupManagement(ILoggerFactory loggerFactory, IMediator mediator)
+        public CreateExcerciseGroup(ILoggerFactory loggerFactory, IMediator mediator)
         {
-            _logger = loggerFactory.CreateLogger<ExcerciseGroupManagement>();
+            _logger = loggerFactory.CreateLogger<CreateExcerciseGroup>();
             _mediator = mediator;
         }
         #endregion
 
         #region Azure Function
         [Function("CreateExcerciseGroup")]
-        [OpenApiOperation(nameof(ExcerciseGroupManagement), "Excercise")]
+        [OpenApiOperation(nameof(CreateExcerciseGroup), "Excercise")]
         [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(ExGroupRequestModel), Required = true)]
-        [OpenApiResponseWithBody(HttpStatusCode.OK,"application/json",bodyType:typeof(BaseResponseModel))]
+        [OpenApiResponseWithBody(HttpStatusCode.OK, "application/json", bodyType: typeof(BaseResponseModel))]
         [OpenApiResponseWithBody(HttpStatusCode.BadRequest, "application/json", bodyType: typeof(BaseResponseModel))]
         [OpenApiResponseWithoutBody(HttpStatusCode.InternalServerError, Description = "Internal Server Error.")]
-        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Routes.CreateExGroup)] HttpRequestData req)
+        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Routes.GetAndCreateExGroup)] HttpRequestData req)
         {
             try
             {

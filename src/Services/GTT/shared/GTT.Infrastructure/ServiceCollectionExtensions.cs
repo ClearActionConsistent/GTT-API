@@ -3,6 +3,7 @@ using GTT.Application;
 using GTT.Application.Behaviors;
 using GTT.Application.Commands;
 using GTT.Application.Interfaces.Repositories;
+using GTT.Application.Queries;
 using GTT.Application.Repositories;
 using GTT.Infrastructure.Data;
 using GTT.Infrastructure.Repositories;
@@ -31,6 +32,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         services.AddMediatR(typeof(CreateExGroup).Assembly);
         services.AddValidatorsFromAssembly(typeof(CreateExGroup).Assembly, includeInternalTypes: true);
+        services.AddMediatR(typeof(GetExGroup).Assembly);
     }
 
     private static void AddServices(IServiceCollection services)

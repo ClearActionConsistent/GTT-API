@@ -1,8 +1,9 @@
-﻿using System.Data;
+using System.Data;
 using Dapper;
 using GTT.Application.Interfaces.Repositories;
 using GTT.Application.Requests;
 using GTT.Application;
+using GTT.Domain.Entities;
 
 namespace GTT.Infrastructure.Repositories
 {
@@ -42,6 +43,24 @@ namespace GTT.Infrastructure.Repositories
                 queryParameters.Add("@isActive", request.IsActive);
 
                 var result = await _connection.ExecuteAsync(query, queryParameters);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var error = $"ExGroupRepository - {Helpers.BuildErrorMessage(ex)}";
+                throw new Exception(error);
+            }
+        }
+
+        public async Task<List<ExcerciseGroup>> GetAllExGroup()
+        {
+            try
+            {
+                var query = @"SELECT Id ,GroupNumber, GroupName, Community, Address, City, Quotation, Phone, IsActive
+                              FROM ExcerciseGroup";
+
+                var result = (await _connection.QueryAsync<ExcerciseGroup>(query)).ToList();
 
                 return result;
             }
