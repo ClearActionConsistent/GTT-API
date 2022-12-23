@@ -2,7 +2,6 @@
 using GTT.Application;
 using GTT.Application.Repositories;
 using GTT.Application.ViewModels;
-using GTT.Domain.Entities;
 using System.Data;
 
 namespace GTT.Infrastructure.Repositories
@@ -10,20 +9,22 @@ namespace GTT.Infrastructure.Repositories
     public class ChallengeRepository : IChallengeRepository
     {
         private readonly IDbConnection _connection;
-        private readonly IDbTransaction _tran;
 
         public ChallengeRepository(IDbConnectionFactory dbConnectionFactory)
         {
             _connection = dbConnectionFactory.CreateConnection();
-            _tran = _connection.BeginTransaction();
+        }
+        public ChallengeRepository(IDbConnection dbConnection) 
+        {
+            _connection = dbConnection;
         }
 
-        public async Task<ChallengeVM> AddAsync(ChallengeVM challenge)
+        public async Task<ChallengeVM> AddAsync(CreateChallengeData challenge)
         {
             try
             {
-                var insertChallengeSql = @"INSERT INTO Challenge(Calories, SplatPoints, AvgHR, MaxHR, Miles, Steps, MemberID, ClassID, CreatedDate, UpdatedDate)
-                                    VALUES(@Calories, @SplatPoints, @AvgHR, @MaxHR, @Miles, @Steps, @MemberID, @ClassID, @CreatedDate, @UpdatedDate)
+                var insertChallengeSql = @"INSERT INTO Challenge(Calories, SplatPoints, AvgHR, MaxHR, Miles, Steps, MemberID, ClassID, CreatedDate, UpdatedDate, CreatedBy, UpdatedBy)
+                                    VALUES(@Calories, @SplatPoints, @AvgHR, @MaxHR, @Miles, @Steps, @MemberID, @ClassID, @CreatedDate, @UpdatedDate, @CreatedBy, @UpdatedBy)
                                     DECLARE @challengeID int
                                     SET @challengeID = SCOPE_IDENTITY()
                                     SELECT* FROM Challenge WHERE challengeID = @ChallengeId
@@ -41,18 +42,17 @@ namespace GTT.Infrastructure.Repositories
                     ClassID = challenge.classID,
                     CreatedDate = challenge.CreatedDate,
                     UpdatedDate = challenge.UpdatedDate,
+                    CreatedBy = challenge.CreatedBy,
+                    UpdatedBy = challenge.UpdatedBy,
                 };
 
-                var result = await _connection.QuerySingleOrDefaultAsync<ChallengeVM>(insertChallengeSql, param, _tran);
-                _tran.Commit();
+                var result = await _connection.QueryFirstAsync<ChallengeVM>(insertChallengeSql, param);
                 return result;
             }
             catch (Exception ex)
             {
-                _tran.Rollback();
                 throw new Exception(ex.Message);
-            }
-            
+            }     
         }
     }
 }

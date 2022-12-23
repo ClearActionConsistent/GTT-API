@@ -6,6 +6,6 @@ namespace GTT.Application.Repositories
 {
     public interface IChallengeRepository
     {
-        Task<ChallengeVM> AddAsync(ChallengeVM challengeVM);
+        Task<ChallengeVM> AddAsync(CreateChallengeData challengeVM);
     }
 }

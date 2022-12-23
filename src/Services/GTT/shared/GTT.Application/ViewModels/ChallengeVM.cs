@@ -1,7 +1,11 @@
-﻿namespace GTT.Application.ViewModels
+﻿using GTT.Application.Response;
+
+namespace GTT.Application.ViewModels
 {
-    public class ChallengeVM : BaseVM
+    public class ChallengeVM : BaseModel
     {
+        public int challengeID { get; set; }
+
         public int Calories { get; set; }
 
         public int SplatPoints { get; set; }

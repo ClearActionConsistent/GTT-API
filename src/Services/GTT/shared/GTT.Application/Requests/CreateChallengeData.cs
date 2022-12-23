@@ -1,6 +1,8 @@
-﻿namespace GTT.Application.ViewModels
+﻿using GTT.Application.Response;
+
+namespace GTT.Application.ViewModels
 {
-    public class CreateChallengeData : BaseVM
+    public class CreateChallengeData : BaseModel
     {
         public int Calories { get; set; }
 

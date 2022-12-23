@@ -57,32 +57,15 @@ namespace GTT.Application.Commands
         {
             private readonly IChallengeRepository _challengeRepo;
 
-            public Handler(IChallengeRepository repo)
+            public Handler(IChallengeRepository challengeRepository)
             {
-                _challengeRepo = repo;
+                _challengeRepo = challengeRepository;
             }
             public async Task<BaseResponseModel> Handle(Command command, CancellationToken cancellationToken)
             {
-
-                ChallengeVM challengeVM = new ChallengeVM
-                {
-                    Calories = command.createChallengeData.Calories,
-                    SplatPoints = command.createChallengeData.SplatPoints,
-                    AvgHr = command.createChallengeData.AvgHr,
-                    MaxHr = command.createChallengeData.MaxHr,
-                    Miles = command.createChallengeData.Miles,
-                    Steps = command.createChallengeData.Steps,
-                    memberID = command.createChallengeData.memberID,
-                    classID = command.createChallengeData.classID,
-                    CreatedDate = command.createChallengeData.CreatedDate,
-                    UpdatedDate = command.createChallengeData.UpdatedDate,
-
-                };
-
-                var challenge = await _challengeRepo.AddAsync(challengeVM);
+                var challenge = await _challengeRepo.AddAsync(command.createChallengeData);
 
                 return new BaseResponseModel(HttpStatusCode.OK, "Success",challenge);
-                
             }
         }
     }
