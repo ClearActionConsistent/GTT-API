@@ -11,6 +11,8 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using GTT.Application;
+using GTT.Application.Response;
+using FluentValidation.Results;
 
 namespace GTT_API
 {
@@ -33,6 +35,9 @@ namespace GTT_API
         [Function("CreateExcerciseGroup")]
         [OpenApiOperation(nameof(ExcerciseGroupManagement), "Excercise")]
         [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(ExGroupRequestModel), Required = true)]
+        [OpenApiResponseWithBody(HttpStatusCode.OK,"application/json",bodyType:typeof(BaseResponseModel))]
+        [OpenApiResponseWithBody(HttpStatusCode.BadRequest, "application/json", bodyType: typeof(BaseResponseModel))]
+        [OpenApiResponseWithoutBody(HttpStatusCode.InternalServerError, Description = "Internal Server Error.")]
         public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Routes.CreateExGroup)] HttpRequestData req)
         {
             try
@@ -42,7 +47,7 @@ namespace GTT_API
                 var data = JsonConvert.DeserializeObject<ExGroupRequestModel>(requestBody);
                 var result = await _mediator.Send(new CreateExGroup.Command(data));
                 var respone = req.CreateResponse();
-                await respone.WriteAsJsonAsync(result, result.Status == HttpStatusCode.OK ? HttpStatusCode.OK : HttpStatusCode.BadRequest);
+                await respone.WriteAsJsonAsync(result);
 
                 return respone;
             }
@@ -51,7 +56,7 @@ namespace GTT_API
                 var error = $"[AzureFunction] CreateExcerciseGroup - {Helpers.BuildErrorMessage(ex)}";
                 _logger.LogError(error);
                 var response = req.CreateResponse();
-                await response.WriteAsJsonAsync(error, HttpStatusCode.InternalServerError);
+                await response.WriteAsJsonAsync(error, HttpStatusCode.BadRequest);
                 return response;
             }
             catch (Exception ex)
