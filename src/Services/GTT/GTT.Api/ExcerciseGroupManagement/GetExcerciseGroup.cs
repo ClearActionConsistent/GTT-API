@@ -40,7 +40,7 @@ namespace GTT_API.ExcerciseGroupManagement
 
                 var response = req.CreateResponse();
                 var result = await _mediator.Send(new GetExGroup.Query());
-                await response.WriteAsJsonAsync(result);
+                await response.WriteAsJsonAsync(result, result.Status);
 
                 return response;
             }

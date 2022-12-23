@@ -46,7 +46,7 @@ namespace GTT_API.ExcerciseGroupManagement
                 var data = JsonConvert.DeserializeObject<ExGroupRequestModel>(requestBody);
                 var result = await _mediator.Send(new CreateExGroup.Command(data));
                 var respone = req.CreateResponse();
-                await respone.WriteAsJsonAsync(result);
+                await respone.WriteAsJsonAsync(result, result.Status);
 
                 return respone;
             }
