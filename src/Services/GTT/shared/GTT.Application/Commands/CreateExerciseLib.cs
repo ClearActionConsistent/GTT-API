@@ -3,6 +3,7 @@ using GTT.Application.Interfaces.Repositories;
 using GTT.Application.Requests.ExerciseLib;
 using GTT.Application.Response;
 using MediatR;
+using System.Net;
 
 namespace GTT.Application.Commands.ExerciseLibrary
 {
@@ -35,16 +36,19 @@ namespace GTT.Application.Commands.ExerciseLibrary
 
             public async Task<BaseResponseModel> Handle(Command request, CancellationToken cancellationToken)
             {
-                try
+                var result = await _exerciseLibRepository.CreateExerciseLib(request.data);
+
+                if (result.Status == HttpStatusCode.NotFound)
                 {
-                    var result = await _exerciseLibRepository.CreateExerciseLib(request.data);
-                    return result;
+                    return new BaseResponseModel(HttpStatusCode.NotFound, result.Message);
                 }
-                catch (Exception ex)
+
+                if (result.Status == HttpStatusCode.BadRequest)
                 {
-                    var error = $"[Handle] CreateExGroup - {Helpers.BuildErrorMessage(ex)}";
-                    throw new Exception(error);
+                    return new BaseResponseModel(HttpStatusCode.BadRequest, result.Message);
                 }
+
+                return result;
             }
         }
     }

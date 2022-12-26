@@ -41,7 +41,10 @@ namespace GTT.Infrastructure.Repositories
                                             WHERE e.Name = @ExName";
 
                 var query = @"INSERT INTO Exercise (ClassId, Name, Image, IsActive, CreatedDate, CreatedBy, UpdatedBy, UpdatedDate)
-                                VALUES (@ClassId, @ExName, @ExImage, @IsActive, @CreatedDate, @CreatedBy, @UpdateBy, @UpdatedDate)";
+                                VALUES (@ClassId, @ExName, @ExImage, @IsActive, @CreatedDate, @CreatedBy, @UpdateBy, @UpdatedDate)
+                                DECLARE @exerciseId int                             
+                                SET @exerciseId = SCOPE_IDENTITY()
+                                SELECT * FROM Exercise WHERE ExerciseId = @exerciseId";
 
                 var parameters = new DynamicParameters();
                 parameters.Add("@ClassId", request.ClassId);
@@ -57,20 +60,16 @@ namespace GTT.Infrastructure.Repositories
 
                 if (checkName == null)
                 {
-                    var insertExerciseLib = await _connection.ExecuteAsync(query, parameters);
+                    var result = await _connection.QueryFirstAsync<ExerciseLibVM>(query, parameters);
 
-                    return new BaseResponseModel
-                    (
-                        insertExerciseLib >= 0 ? HttpStatusCode.OK : HttpStatusCode.BadRequest,
-                        insertExerciseLib >= 0 ? "Success" : "Faild to create Exercise Library"
-                    );
+                    return new BaseResponseModel(result);
                 }
                 else
                 {
                     return new BaseResponseModel
                     (
                         HttpStatusCode.BadRequest,
-                        "Exercise Name alrealy Exist!"
+                        "Exercise Name must be unique"
                     );
                 }
             }

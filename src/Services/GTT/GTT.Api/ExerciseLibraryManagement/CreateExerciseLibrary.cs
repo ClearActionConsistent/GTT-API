@@ -47,7 +47,7 @@ namespace GTT_API.ExerciseLibrary
                 var data = JsonConvert.DeserializeObject<CreateExerciseLibRequestModel>(requestBody);
                 var result = await _mediator.Send(new CreateExerciseLib.Command(data));
                 var respone = req.CreateResponse();
-                await respone.WriteAsJsonAsync(result, result.Status == HttpStatusCode.OK ? HttpStatusCode.OK : HttpStatusCode.BadRequest);
+                await respone.WriteAsJsonAsync(result, result.Status);
 
                 return respone;
             }
