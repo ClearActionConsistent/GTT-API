@@ -4,7 +4,6 @@ using GTT.Application.Repositories;
 using GTT.Application.Requests;
 using GTT.Application.Response;
 using GTT.Application.ViewModels;
-using GTT.Domain.Entities;
 using System.Data;
 using System.Net;
 
@@ -92,7 +91,7 @@ namespace GTT.Infrastructure.Repositories
                 parameter.Add("@coachId", request.CoachId);
                 parameter.Add("@communityId", request.CommunityId);
 
-                var queryData = await _connection.QueryFirstOrDefaultAsync<CoachCommunityResponse>(sql, parameter, _tran);
+                var queryData = await _connection.QueryFirstOrDefaultAsync(sql, parameter, _tran);
 
                 if (queryData == null)
                 {
@@ -102,8 +101,6 @@ namespace GTT.Infrastructure.Repositories
                 sql = @"SELECT * FROM Class c WHERE c.Title = @title";
 
                 parameter.Add("@title", request.Title);
-                //parameter.Add("@upCase", request.Title.ToLower());
-                //parameter.Add("@upCase", request.Title.ToUpper());
 
                 var queryTitle = await _connection.QueryFirstOrDefaultAsync(sql, parameter, _tran);
 
@@ -135,7 +132,7 @@ namespace GTT.Infrastructure.Repositories
 
                 _tran.Commit();
 
-                return new BaseResponseModel(HttpStatusCode.OK, "Success", result);
+                return new BaseResponseModel(result);
             }
             catch(Exception ex)
             {

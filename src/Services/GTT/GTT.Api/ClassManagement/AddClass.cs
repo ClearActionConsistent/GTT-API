@@ -41,7 +41,7 @@ namespace GTT_API.ClassManagement
         {
             try
             {
-                _logger.LogInformation("C# HTTP Trigger function CreateExcerciseGroup request.");
+                _logger.LogInformation("C# HTTP Trigger function CreateClass request.");
                 var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 var data = JsonConvert.DeserializeObject<CreateClassRequestModel>(requestBody);
                 var result = await _mediator.Send(new CreateClass.Command(data));
@@ -60,7 +60,7 @@ namespace GTT_API.ClassManagement
             }
             catch (Exception ex)
             {
-                var error = $"[AzureFunction] CreateExcerciseGroup - {Helpers.BuildErrorMessage(ex)}";
+                var error = $"[AzureFunction] CreateClass - {Helpers.BuildErrorMessage(ex)}";
                 _logger.LogError(error);
                 var response = req.CreateResponse();
                 await response.WriteAsJsonAsync(error, HttpStatusCode.InternalServerError);
