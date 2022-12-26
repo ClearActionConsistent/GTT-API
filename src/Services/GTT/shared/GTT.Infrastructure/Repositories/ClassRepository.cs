@@ -61,24 +61,24 @@ namespace GTT.Infrastructure.Repositories
 
         public async Task<ClassVM> GetByIdAsync(int id)
         {
-            var insertChallengeSql = @"SELECT c.ClassId,
-                                              c.Title,
-                                              c.CoachId, 
-                                              c.CommunityId, 
-                                              c.Duration,
-                                              c.StartDate, 
-                                              c.CreatedBy, 
-                                              c.UpdatedBy, 
-                                              c.CreatedDate,
-                                              c.UpdatedDate,
-                                              c.IsActive
-                                              FROM Class c WHERE ClassId = @Id";
+            var query = @"SELECT c.ClassId,
+                                 c.Title,
+                                 c.CoachId, 
+                                 c.CommunityId, 
+                                 c.Duration,
+                                 c.StartDate, 
+                                 c.CreatedBy, 
+                                 c.UpdatedBy, 
+                                 c.CreatedDate,
+                                 c.UpdatedDate,
+                                 c.IsActive
+                           FROM Class c WHERE ClassId = @Id";
 
             var parameter = new DynamicParameters();
 
             parameter.Add("@ClassId", id);
 
-            var result = await _connection.QuerySingleOrDefaultAsync<ClassVM>(insertChallengeSql, new { Id = id }, _tran);
+            var result = await _connection.QuerySingleOrDefaultAsync<ClassVM>(query, new { Id = id }, _tran);
             return result;
         }
 
