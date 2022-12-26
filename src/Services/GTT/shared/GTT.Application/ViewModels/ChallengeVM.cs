@@ -1,6 +1,6 @@
 ﻿namespace GTT.Application.ViewModels
 {
-    public class ClassVM
+    public class Challenge
     {
         public string Name { get; set; }
     }

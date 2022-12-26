@@ -1,8 +1,11 @@
 ﻿using Dapper;
 using GTT.Application;
 using GTT.Application.Repositories;
-using GTT.Domain.Entities;
+using GTT.Application.Requests;
+using GTT.Application.Response;
+using GTT.Application.ViewModels;
 using System.Data;
+using System.Net;
 
 namespace GTT.Infrastructure.Repositories
 {
@@ -22,7 +25,7 @@ namespace GTT.Infrastructure.Repositories
             _tran = tran;
         }
 
-        public async Task<int> AddAsync(Challenge entity)
+        public async Task<int> AddAsync(ClassVM entity)
         {
             var insertChallengeSql = @"
                     INSERT INTO Challenge(field1, field2, field3)
@@ -49,25 +52,93 @@ namespace GTT.Infrastructure.Repositories
             return result;
         }
 
-        public async Task<IReadOnlyList<Challenge>> GetAllAsync()
+        public async Task<IReadOnlyList<ClassVM>> GetAllAsync()
         {
             var insertChallengeSql = @"SELECT * FROM Challenge";
-            var result = await _connection.QueryAsync<Challenge>(insertChallengeSql, _tran);
+            var result = await _connection.QueryAsync<ClassVM>(insertChallengeSql, _tran);
             return result.ToList();
         }
 
-        public async Task<Challenge> GetByIdAsync(int id)
+        public async Task<ClassVM> GetByIdAsync(int id)
         {
-            var insertChallengeSql = @"SELECT * FROM Challenge WHERE Id = @Id";
-            var result = await _connection.QuerySingleOrDefaultAsync<Challenge>(insertChallengeSql, new { Id = id }, _tran);
+            var insertChallengeSql = @"SELECT * FROM Class WHERE ClassId = @Id";
+
+            var parameter = new DynamicParameters();
+
+            parameter.Add("@ClassId", id);
+
+            var result = await _connection.QuerySingleOrDefaultAsync<ClassVM>(insertChallengeSql, new { Id = id }, _tran);
             return result;
         }
 
-        public async Task<int> UpdateAsync(Challenge entity)
+        public async Task<int> UpdateAsync(ClassVM entity)
         {
             var sql = @"UPDATE Challenge SET something equal something";
             var result = await _connection.ExecuteAsync(sql, entity, _tran);
             return result;
+        }
+
+        public async Task<BaseResponseModel> CreateClass(CreateClassRequestModel request)
+        {
+            try
+            {
+                #region  Check CommunityId and CoachId
+                var sql = @"SELECT cm.CommunityId, c.CoachId  FROM Community cm, Coach c 
+                            WHERE cm.CommunityId = @communityId and c.CoachId = @coachId";
+
+                var parameter = new DynamicParameters();
+
+                parameter.Add("@coachId", request.CoachId);
+                parameter.Add("@communityId", request.CommunityId);
+
+                var queryData = await _connection.QueryFirstOrDefaultAsync(sql, parameter, _tran);
+
+                if (queryData == null)
+                {
+                    return new BaseResponseModel(HttpStatusCode.NotFound, "CommunityId or CoachId invalid");
+                }
+
+                sql = @"SELECT * FROM Class c WHERE c.Title = @title";
+
+                parameter.Add("@title", request.Title);
+
+                var queryTitle = await _connection.QueryFirstOrDefaultAsync(sql, parameter, _tran);
+
+                if(queryTitle != null)
+                {
+                    return new BaseResponseModel(HttpStatusCode.BadRequest, "Title must be unique");
+                }
+
+                #endregion
+
+                sql = @"INSERT INTO Class
+                             VALUES(@title, @coachId, @communityId, @duration, @startDate, @createdBy, @updatedBy, @createdDate, @updatedDate, @IsActive);
+                             DECLARE @classId int                             
+                             SET @classId = SCOPE_IDENTITY()
+                             SELECT * FROM Class WHERE ClassId = @classId";
+
+                parameter.Add("@title", request.Title);
+                parameter.Add("@duration", request.Duration);
+                parameter.Add("@startDate", request.StartDate);
+                parameter.Add("@isActive", request.IsActive);
+                parameter.Add("@startDate", request.StartDate);
+                parameter.Add("@createdBy", request.CreatedBy);
+                parameter.Add("@updatedBy", request.UpdatedBy);
+                parameter.Add("@createdDate", request.CreatedDate);
+                parameter.Add("@updatedDate", request.UpdatedDate);
+                parameter.Add("@IsActive", request.IsActive);
+
+                var result = await _connection.QueryFirstAsync<ClassVM>(sql, parameter, _tran);
+
+                _tran.Commit();
+
+                return new BaseResponseModel(result);
+            }
+            catch(Exception ex)
+            {
+                var error = $"ClassRepository - {Helpers.BuildErrorMessage}";
+                throw new Exception(error, ex);
+            }
         }
     }
 }
