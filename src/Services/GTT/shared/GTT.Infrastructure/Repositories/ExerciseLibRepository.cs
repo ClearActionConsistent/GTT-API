@@ -37,14 +37,15 @@ namespace GTT.Infrastructure.Repositories
                 if (!checkId)
                     return new BaseResponseModel(HttpStatusCode.NotFound, "Class Id invalid");
 
-                var queryCheckName = @"SELECT * FROM Exercise e
+                var queryCheckName = @"SELECT Name FROM Exercise e
                                             WHERE e.Name = @ExName";
 
                 var query = @"INSERT INTO Exercise (ClassId, Name, Image, IsActive, CreatedDate, CreatedBy, UpdatedBy, UpdatedDate)
                                 VALUES (@ClassId, @ExName, @ExImage, @IsActive, @CreatedDate, @CreatedBy, @UpdateBy, @UpdatedDate)
                                 DECLARE @exerciseId int                             
                                 SET @exerciseId = SCOPE_IDENTITY()
-                                SELECT * FROM Exercise WHERE ExerciseId = @exerciseId";
+                                SELECT ExerciseId, ClassId, Name, Image, IsActive, CreatedBy, UpdatedBy, CreatedDate, UpdatedDate 
+                                FROM Exercise WHERE ExerciseId = @exerciseId";
 
                 var parameters = new DynamicParameters();
                 parameters.Add("@ClassId", request.ClassId);
@@ -82,11 +83,20 @@ namespace GTT.Infrastructure.Repositories
 
         private async Task<bool> CheckClassExist(int Id)
         {
-            var checkClassId = @"SELECT * FROM CLASS
+            try
+            {
+                var checkClassId = @"SELECT ClassId FROM CLASS
                                     WHERE ClassId = @Id";
-            var resultCheck = await _connection.QueryFirstOrDefaultAsync(checkClassId, new { Id });
+                var resultCheck = await _connection.QueryFirstOrDefaultAsync(checkClassId, new { Id });
 
-            return resultCheck != null ? true : false;
+                return resultCheck != null ? true : false;
+            }
+            catch (Exception ex)
+            {
+                var error = $"ExerciseLibRepository - {Helpers.BuildErrorMessage(ex)}";
+                throw new Exception(error);
+            }
+            
         }
     }
 }
