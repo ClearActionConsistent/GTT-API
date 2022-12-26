@@ -55,12 +55,17 @@ namespace GTT.Application.Commands
 
                 if (result.Status == HttpStatusCode.OK)
                 {
-                    return new BaseResponseModel(HttpStatusCode.OK, "Success");
+                    return new BaseResponseModel(HttpStatusCode.OK, "Success", result.Dto);
                 }
 
                 if (result.Status == HttpStatusCode.NotFound)
                 {
                     return new BaseResponseModel(HttpStatusCode.NotFound, result.Message);
+                }
+
+                if (result.Status == HttpStatusCode.BadRequest)
+                {
+                    return new BaseResponseModel(HttpStatusCode.BadRequest, result.Message);
                 }
 
                 return new BaseResponseModel(HttpStatusCode.BadRequest, "Failed to create Class");
