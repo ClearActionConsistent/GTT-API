@@ -13,11 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shared", "shared", "{7BBB38
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GTT.Api", "src\Services\GTT\GTT.Api\GTT.Api.csproj", "{16B2FDE0-ACFB-44FA-BE4E-86959E55DF9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GTT.Application", "src\Services\GTT\shared\GTT.Application\GTT.Application.csproj", "{4591F98C-ED52-4C8C-A86D-80070D01BA15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GTT.Application", "src\Services\GTT\shared\GTT.Application\GTT.Application.csproj", "{4591F98C-ED52-4C8C-A86D-80070D01BA15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GTT.Domain", "src\Services\GTT\shared\GTT.Domain\GTT.Domain.csproj", "{5AA0F734-5FAB-45C5-88C3-D6C663B268C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GTT.Domain", "src\Services\GTT\shared\GTT.Domain\GTT.Domain.csproj", "{5AA0F734-5FAB-45C5-88C3-D6C663B268C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GTT.Infrastructure", "src\Services\GTT\shared\GTT.Infrastructure\GTT.Infrastructure.csproj", "{B7E580EE-6724-4016-8E82-94670A04FCCD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GTT.Infrastructure", "src\Services\GTT\shared\GTT.Infrastructure\GTT.Infrastructure.csproj", "{B7E580EE-6724-4016-8E82-94670A04FCCD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
