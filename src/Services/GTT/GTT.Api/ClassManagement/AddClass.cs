@@ -1,6 +1,5 @@
 using System.Net;
 using FluentValidation;
-using GTT.Api.Configuration;
 using GTT.Application.Commands;
 using GTT.Application.Requests;
 using MediatR;
@@ -12,7 +11,6 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using GTT.Application;
 using GTT.Application.Response;
-using FluentValidation.Results;
 
 namespace GTT_API.ClassManagement
 {
@@ -26,7 +24,7 @@ namespace GTT_API.ClassManagement
         #region Constructors
         public AddClass(ILoggerFactory loggerFactory, IMediator mediator)
         {
-            _logger = loggerFactory.CreateLogger<ExcerciseGroupManagement>();
+            _logger = loggerFactory.CreateLogger<AddClass>();
             _mediator = mediator;
         }
         #endregion

@@ -98,7 +98,7 @@ namespace GTT.Infrastructure.Repositories
                     return new BaseResponseModel(HttpStatusCode.NotFound, "CommunityId or CoachId invalid");
                 }
 
-                sql = @"SELECT * FROM Class c WHERE c.Title = @title";
+                sql = @"SELECT c.Title FROM Class c WHERE c.Title = @title";
 
                 parameter.Add("@title", request.Title);
 
