@@ -65,7 +65,7 @@ namespace GTT.Infrastructure.Repositories
 
         private async Task<bool> checkClassExist(int classid)
         {
-            var query = @"SELECT * FROM Class WHERE ClassId = @classid";
+            var query = @"SELECT ClassId FROM Class WHERE ClassId = @classid";
 
             var result = await _connection.QueryFirstOrDefaultAsync(query, new { classid });
 

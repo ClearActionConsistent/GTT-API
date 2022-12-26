@@ -40,9 +40,8 @@ namespace GTT_API.ChallengeManagement
             {
                 _logger.LogInformation("C# HTTP Trigger function CreateChallenge request.");
 
-                // Get request body data.
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                dynamic data = JsonConvert.DeserializeObject<CreateChallengeData>(requestBody); // Get data       
+                dynamic data = JsonConvert.DeserializeObject<CreateChallengeData>(requestBody);       
 
                 var command = new CreateChallange.Command(data);
                 var challenge = await _mediator.Send(command);
