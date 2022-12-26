@@ -2,7 +2,7 @@
 using FluentValidation.Results;
 using GTT.Api.Configuration;
 using GTT.Application.Commands;
-using GTT.Application.ViewModels;
+using GTT.Application.Requests;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;

@@ -8,7 +8,7 @@ namespace GTT.Domain.Entities
 {
     public class Challenge
     {
-        public int challengeID { get; set; }
+        public int ChallengeID { get; set; }
 
         public int Calories { get; set; }
 
@@ -22,8 +22,6 @@ namespace GTT.Domain.Entities
 
         public int Steps { get; set; }
 
-        public int memberID { get; set; }
-
-        public int classID { get; set; }
+        public int ClassID { get; set; }
     }
 }

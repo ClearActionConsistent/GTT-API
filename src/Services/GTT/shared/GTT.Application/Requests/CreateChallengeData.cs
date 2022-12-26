@@ -1,6 +1,6 @@
 ﻿using GTT.Application.Response;
 
-namespace GTT.Application.ViewModels
+namespace GTT.Application.Requests
 {
     public class CreateChallengeData : BaseModel
     {
@@ -16,8 +16,6 @@ namespace GTT.Application.ViewModels
 
         public int Steps { get; set; }
 
-        public int memberID { get; set; }
-
-        public int classID { get; set; }
+        public int ClassID { get; set; }
     }
 }

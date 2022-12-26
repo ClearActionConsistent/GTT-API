@@ -1,8 +1,11 @@
 ﻿using Dapper;
 using GTT.Application;
 using GTT.Application.Repositories;
+using GTT.Application.Requests;
+using GTT.Application.Response;
 using GTT.Application.ViewModels;
 using System.Data;
+using System.Net;
 
 namespace GTT.Infrastructure.Repositories
 {
@@ -19,12 +22,18 @@ namespace GTT.Infrastructure.Repositories
             _connection = dbConnection;
         }
 
-        public async Task<ChallengeVM> AddAsync(CreateChallengeData challenge)
+        public async Task<BaseResponseModel> AddAsync(CreateChallengeData challenge)
         {
             try
             {
-                var insertChallengeSql = @"INSERT INTO Challenge(Calories, SplatPoints, AvgHR, MaxHR, Miles, Steps, MemberID, ClassID, CreatedDate, UpdatedDate, CreatedBy, UpdatedBy)
-                                    VALUES(@Calories, @SplatPoints, @AvgHR, @MaxHR, @Miles, @Steps, @MemberID, @ClassID, @CreatedDate, @UpdatedDate, @CreatedBy, @UpdatedBy)
+                var checkclass = await checkClassExist(challenge.ClassID);
+                if(!checkclass)
+                {
+                    return new BaseResponseModel(HttpStatusCode.NotFound, "Class ID invalid");
+                }
+
+                var insertChallengeSql = @"INSERT INTO Challenge(Calories, SplatPoints, AvgHR, MaxHR, Miles, Steps, ClassID, CreatedDate, UpdatedDate, CreatedBy, UpdatedBy)
+                                    VALUES(@Calories, @SplatPoints, @AvgHR, @MaxHR, @Miles, @Steps, @ClassID, @CreatedDate, @UpdatedDate, @CreatedBy, @UpdatedBy)
                                     DECLARE @challengeID int
                                     SET @challengeID = SCOPE_IDENTITY()
                                     SELECT* FROM Challenge WHERE challengeID = @ChallengeId
@@ -38,8 +47,7 @@ namespace GTT.Infrastructure.Repositories
                     MaxHR = challenge.MaxHr,
                     Miles = challenge.Miles,
                     Steps = challenge.Steps,
-                    MemberID = challenge.memberID,
-                    ClassID = challenge.classID,
+                    ClassID = challenge.ClassID,
                     CreatedDate = challenge.CreatedDate,
                     UpdatedDate = challenge.UpdatedDate,
                     CreatedBy = challenge.CreatedBy,
@@ -47,12 +55,21 @@ namespace GTT.Infrastructure.Repositories
                 };
 
                 var result = await _connection.QueryFirstAsync<ChallengeVM>(insertChallengeSql, param);
-                return result;
+                return new BaseResponseModel(result);
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }     
+        }
+
+        private async Task<bool> checkClassExist(int classid)
+        {
+            var query = @"SELECT * FROM Class WHERE ClassId = @classid";
+
+            var result = await _connection.QueryFirstOrDefaultAsync(query, new { classid });
+
+            return result != null ? true : false;
         }
     }
 }

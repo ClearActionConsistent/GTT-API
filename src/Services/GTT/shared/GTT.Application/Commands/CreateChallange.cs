@@ -1,10 +1,8 @@
 using FluentValidation;
 using GTT.Application.Repositories;
+using GTT.Application.Requests;
 using GTT.Application.Response;
-using GTT.Application.ViewModels;
-using GTT.Domain.Entities;
 using MediatR;
-using System.Net;
 
 namespace GTT.Application.Commands
 {
@@ -30,7 +28,6 @@ namespace GTT.Application.Commands
                      .NotNull().WithMessage("Challege Avg Hr is required")
                      .NotEmpty().WithMessage("Challege Avg Hr is not empty");
 
-
                 RuleFor(x => x.createChallengeData.MaxHr)
                      .NotNull().WithMessage("Challege Max Hr is required")
                      .NotEmpty().WithMessage("Challege Max Hr is not empty");
@@ -43,11 +40,7 @@ namespace GTT.Application.Commands
                      .NotNull().WithMessage("Challege Steps is required")
                      .NotEmpty().WithMessage("Challege Steps is not empty");
 
-                RuleFor(x => x.createChallengeData.memberID)
-                     .NotNull().WithMessage("Member ID is required")
-                     .NotEmpty().WithMessage("Member ID is not empty");
-
-                RuleFor(x => x.createChallengeData.classID)
+                RuleFor(x => x.createChallengeData.ClassID)
                     .NotNull().WithMessage("Class ID is required")
                     .NotEmpty().WithMessage("Class ID is not empty");
             }
@@ -65,7 +58,7 @@ namespace GTT.Application.Commands
             {
                 var challenge = await _challengeRepo.AddAsync(command.createChallengeData);
 
-                return new BaseResponseModel(HttpStatusCode.OK, "Success",challenge);
+                return challenge;
             }
         }
     }
