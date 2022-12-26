@@ -93,8 +93,6 @@ namespace GTT.Infrastructure.Repositories
         {
             try
             {
-                var checkx = await GetByIdAsync(19);
-
                 #region  Check CommunityId and CoachId
                 var sql = @"SELECT cm.CommunityId, c.CoachId  FROM Community cm, Coach c 
                             WHERE cm.CommunityId = @communityId and c.CoachId = @coachId";
