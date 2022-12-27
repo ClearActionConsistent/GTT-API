@@ -1,9 +1,10 @@
-﻿using GTT.Domain.Entities;
+﻿using GTT.Application.Requests;
+using GTT.Application.Response;
 
 namespace GTT.Application.Repositories
 {
-    public interface IChallengeRepository: IGenericRepository<Challenge>
+    public interface IChallengeRepository
     {
-
+        Task<BaseResponseModel> AddAsync(CreateChallengeData challengeVM);
     }
 }

@@ -16,7 +16,6 @@ namespace GTT.Infrastructure
             _connection = dbConnectionFactory.CreateConnection();
             _tran = _connection.BeginTransaction();
 
-            Challenges = new ChallengeRepository(_connection, _tran);
             Classes = new ClassRepository(_connection, _tran);
         }
 
