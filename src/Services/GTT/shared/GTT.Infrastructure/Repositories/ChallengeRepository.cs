@@ -1,72 +1,86 @@
 ﻿using Dapper;
 using GTT.Application;
 using GTT.Application.Repositories;
-using GTT.Domain.Entities;
+using GTT.Application.Requests;
+using GTT.Application.Response;
+using GTT.Application.ViewModels;
 using System.Data;
+using System.Net;
 
 namespace GTT.Infrastructure.Repositories
 {
     public class ChallengeRepository : IChallengeRepository
     {
         private readonly IDbConnection _connection;
-        private readonly IDbTransaction _tran;
-        public ChallengeRepository(IDbConnection connection, IDbTransaction tran)
+
+        public ChallengeRepository(IDbConnectionFactory dbConnectionFactory)
         {
-            _connection = connection;
-            _tran = tran;
+            _connection = dbConnectionFactory.CreateConnection();
+        }
+        public ChallengeRepository(IDbConnection dbConnection)
+        {
+            _connection = dbConnection;
         }
 
-        public async Task<int> AddAsync(Challenge entity)
+        public async Task<BaseResponseModel> AddAsync(CreateChallengeData challenge)
         {
-            var insertChallengeSql = @"
-                    INSERT INTO Challenge(field1, field2, field3)
-                    VALUES(@field1, @field2, @field3)
-                    SET @ChallengeId = SCOPE_IDENTITY()
-                    SELECT * FROM Challenge WHERE ChallengeId = @ChallengeId
-                ";
-
-            var param = new
+            try
             {
-                field1 = "entity.field1",
-                field2 = "entity.field2",
-                field3 = "entity.field3"
-            };
+                var checkclass = await checkClassExist(challenge.ClassID);
+                if (!checkclass)
+                {
+                    return new BaseResponseModel(HttpStatusCode.NotFound, "Class ID invalid");
+                }
 
-            var result = await _connection.ExecuteAsync(insertChallengeSql, param, transaction: _tran);
+                var insertChallengeSql = @"INSERT INTO Challenge(Calories, SplatPoints, AvgHR, MaxHR, Miles, Steps, ClassID, CreatedDate, UpdatedDate, CreatedBy, UpdatedBy)
+                                    VALUES(@Calories, @SplatPoints, @AvgHR, @MaxHR, @Miles, @Steps, @ClassID, @CreatedDate, @UpdatedDate, @CreatedBy, @UpdatedBy)
+                                    DECLARE @challengeID int
+                                    SET @challengeID = SCOPE_IDENTITY()
+                                    SELECT
+                                    ChallengeID, Calories, SplatPoints, AvgHR, MaxHR, Miles, Steps, ClassID,
+                                    CreatedDate, UpdatedDate, CreatedBy, UpdatedBy
+                                    FROM Challenge 
+                                    WHERE ChallengeID = @ChallengeId
+                                    ";
 
-            return result;
+                var param = new
+                {
+                    Calories = challenge.Calories,
+                    SplatPoints = challenge.SplatPoints,
+                    AvgHR = challenge.AvgHr,
+                    MaxHR = challenge.MaxHr,
+                    Miles = challenge.Miles,
+                    Steps = challenge.Steps,
+                    ClassID = challenge.ClassID,
+                    CreatedDate = challenge.CreatedDate,
+                    UpdatedDate = challenge.UpdatedDate,
+                    CreatedBy = challenge.CreatedBy,
+                    UpdatedBy = challenge.UpdatedBy,
+                };
+
+                var result = await _connection.QueryFirstAsync<ChallengeVM>(insertChallengeSql, param);
+                return new BaseResponseModel(result);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
-        public async Task<int> DeleteAsync(int id)
+        private async Task<bool> checkClassExist(int classid)
         {
-            var insertChallengeSql = @"DELETE FROM Products WHERE Id = @Id";
-            var result = await _connection.ExecuteAsync(insertChallengeSql, new { Id = id }, _tran);
+            try
+            {
+                var query = @"SELECT ClassId FROM Class WHERE ClassId = @classid";
 
-            return result;
-        }
+                var result = await _connection.QueryFirstOrDefaultAsync(query, new { classid });
 
-        public async Task<IReadOnlyList<Challenge>> GetAllAsync()
-        {
-            var insertChallengeSql = @"SELECT * FROM Challenge";
-            var result = await _connection.QueryAsync<Challenge>(insertChallengeSql, _tran);
-
-            return result.ToList();
-        }
-
-        public async Task<Challenge> GetByIdAsync(int id)
-        {
-            var insertChallengeSql = @"SELECT * FROM Challenge WHERE Id = @Id";
-            var result = await _connection.QuerySingleOrDefaultAsync<Challenge>(insertChallengeSql, new { Id = id }, _tran);
-
-            return result;
-        }
-
-        public async Task<int> UpdateAsync(Challenge entity)
-        {
-            var sql = @"UPDATE Challenge SET something equal something";
-            var result = await _connection.ExecuteAsync(sql, entity, _tran);
-
-            return result;
+                return result != null ? true : false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }
