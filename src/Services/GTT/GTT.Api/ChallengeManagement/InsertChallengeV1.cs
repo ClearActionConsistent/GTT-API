@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 using GTT.Api.Configuration;
+using GTT.Application;
 using GTT.Application.Commands;
 using GTT.Application.Requests;
 using MediatR;
@@ -29,7 +30,6 @@ namespace GTT_API.ChallengeManagement
         [Function("InsertChallenge")]
         [OpenApiSecurity("bearer_auth", SecuritySchemeType.Http, Scheme = OpenApiSecuritySchemeType.Bearer, BearerFormat = "JWT")]
         [OpenApiOperation(nameof(InsertChallengeV1), "Challenge", Visibility = OpenApiVisibilityType.Advanced)]
-
         [OpenApiRequestBody("application/json", typeof(CreateChallengeData))]
         [OpenApiResponseWithBody(HttpStatusCode.Created, "application/json", typeof(List<string>))]
         [OpenApiResponseWithBody(HttpStatusCode.BadRequest, "application/json", typeof(IEnumerable<ValidationFailure>))]
@@ -47,10 +47,9 @@ namespace GTT_API.ChallengeManagement
                 var challenge = await _mediator.Send(command);
 
                 var response = req.CreateResponse(HttpStatusCode.OK);
-                await response.WriteAsJsonAsync(challenge);
+                await response.WriteAsJsonAsync(challenge, challenge.Status);
 
                 return response;
-
             }
             catch (ValidationException ex)
             {
@@ -60,11 +59,12 @@ namespace GTT_API.ChallengeManagement
             }
             catch (Exception ex)
             {
-                var response = req.CreateResponse(HttpStatusCode.InternalServerError);
-                await response.WriteStringAsync("Unhandle exception has occured");
+                var error = Helpers.BuildErrorMessage(ex);
+                _logger.LogError(error);
+                var response = req.CreateResponse();
+                await response.WriteAsJsonAsync(error, HttpStatusCode.InternalServerError);
                 return response;
             }
-
         }
     }
 }

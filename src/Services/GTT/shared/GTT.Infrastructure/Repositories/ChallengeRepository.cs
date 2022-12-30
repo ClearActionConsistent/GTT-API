@@ -81,7 +81,6 @@ namespace GTT.Infrastructure.Repositories
             {
                 throw new Exception(ex.Message);
             }
-
         }
     }
 }
