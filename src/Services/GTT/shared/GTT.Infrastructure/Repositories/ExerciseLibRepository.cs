@@ -1,12 +1,12 @@
 ﻿using Dapper;
 using GTT.Application;
+using GTT.Application.Extensions;
 using GTT.Application.Interfaces.Repositories;
 using GTT.Application.Requests.ExerciseLib;
 using GTT.Application.Response;
 using GTT.Application.ViewModels;
 using System.Data;
 using System.Net;
-using static Dapper.SqlMapper;
 
 namespace GTT.Infrastructure.Repositories
 {

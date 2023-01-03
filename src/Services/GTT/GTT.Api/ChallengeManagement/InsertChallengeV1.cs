@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 using GTT.Api.Configuration;
-using GTT.Application;
+using GTT.Application.Extensions;
 using GTT.Application.Commands;
 using GTT.Application.Requests;
 using MediatR;
@@ -53,13 +53,15 @@ namespace GTT_API.ChallengeManagement
             }
             catch (ValidationException ex)
             {
+                var error = $"[AzureFunction] InsertChallenge - {Helpers.BuildErrorMessage(ex)}";
+                _logger.LogError(error);
                 var responseUnauthorized = req.CreateResponse(HttpStatusCode.BadRequest);
                 await responseUnauthorized.WriteAsJsonAsync(ex.Errors, HttpStatusCode.BadRequest);
                 return responseUnauthorized;
             }
             catch (Exception ex)
             {
-                var error = Helpers.BuildErrorMessage(ex);
+                var error = $"[AzureFunction] InsertChallenge - {Helpers.BuildErrorMessage(ex)}";
                 _logger.LogError(error);
                 var response = req.CreateResponse();
                 await response.WriteAsJsonAsync(error, HttpStatusCode.InternalServerError);

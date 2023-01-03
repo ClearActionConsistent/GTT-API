@@ -30,8 +30,6 @@ public static class ServiceCollectionExtensions
         services.AddMediatR(typeof(GetClasses).Assembly);
         services.AddValidatorsFromAssembly(typeof(GetClasses).Assembly, includeInternalTypes: true);
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-        services.AddMediatR(typeof(CreateExGroup).Assembly);
-        services.AddValidatorsFromAssembly(typeof(CreateExGroup).Assembly, includeInternalTypes: true);
     }
 
     private static void AddServices(IServiceCollection services)
@@ -40,7 +38,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient(typeof(IDbConnectionFactory), typeof(SqlDbConnectionFactory));
         services.AddTransient(typeof(IChallengeRepository), typeof(ChallengeRepository));
         services.AddTransient(typeof(IClassRepository), typeof(ClassRepository));
-        services.AddTransient(typeof(IExGroupRepository), typeof(ExGroupRepository));
+        services.AddTransient(typeof(IExerciseGroupRepository), typeof(ExerciseGroupRepository));
         services.AddTransient(typeof(IExerciseLibRepository), typeof(ExerciseLibRepository));
     }
     private static void AddOptions(IServiceCollection services)
