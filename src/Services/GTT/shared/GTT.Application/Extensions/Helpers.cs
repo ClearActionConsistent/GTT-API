@@ -1,4 +1,4 @@
-﻿namespace GTT.Application
+﻿namespace GTT.Application.Extensions
 {
     public class Helpers
     {

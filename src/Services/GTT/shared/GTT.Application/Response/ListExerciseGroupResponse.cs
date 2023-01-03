@@ -1,7 +1,14 @@
-﻿namespace GTT.Application.Requests
+﻿namespace GTT.Domain.Entities
 {
-    public class ExGroupRequestModel
+    public class ListExerciseGroupResponse
     {
+        public List<ExerciseGroupResponse> ExcerciseGroups { get; set; } = new List<ExerciseGroupResponse>();
+        public int TotalRow { get; set; } 
+    }
+
+    public class ExerciseGroupResponse
+    {
+        public int Id { get; set; }
         public int GroupNumber { get; set; }
         public string GroupName { get; set; } = string.Empty;
         public string Community { get; set; } = string.Empty;

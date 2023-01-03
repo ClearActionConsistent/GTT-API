@@ -1,8 +1,8 @@
 using System.Net;
 using FluentValidation;
 using GTT.Api.Configuration;
-using GTT.Application;
 using GTT.Application.Commands.ExerciseLibrary;
+using GTT.Application.Extensions;
 using GTT.Application.Requests.ExerciseLib;
 using GTT.Application.Response;
 using MediatR;
