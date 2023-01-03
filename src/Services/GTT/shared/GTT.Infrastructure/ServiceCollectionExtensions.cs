@@ -30,8 +30,6 @@ public static class ServiceCollectionExtensions
         services.AddMediatR(typeof(GetClasses).Assembly);
         services.AddValidatorsFromAssembly(typeof(GetClasses).Assembly, includeInternalTypes: true);
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-        services.AddMediatR(typeof(CreateExGroup).Assembly);
-        services.AddValidatorsFromAssembly(typeof(CreateExGroup).Assembly, includeInternalTypes: true);
     }
 
     private static void AddServices(IServiceCollection services)
