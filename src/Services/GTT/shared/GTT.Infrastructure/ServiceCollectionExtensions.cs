@@ -40,7 +40,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient(typeof(IDbConnectionFactory), typeof(SqlDbConnectionFactory));
         services.AddTransient(typeof(IChallengeRepository), typeof(ChallengeRepository));
         services.AddTransient(typeof(IClassRepository), typeof(ClassRepository));
-        services.AddTransient(typeof(IExGroupRepository), typeof(ExGroupRepository));
+        services.AddTransient(typeof(IExerciseGroupRepository), typeof(ExerciseGroupRepository));
         services.AddTransient(typeof(IExerciseLibRepository), typeof(ExerciseLibRepository));
     }
     private static void AddOptions(IServiceCollection services)

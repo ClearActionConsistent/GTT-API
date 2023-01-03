@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using GTT.Application;
+using GTT.Application.Extensions;
 using GTT.Application.Repositories;
 using GTT.Application.Requests;
 using GTT.Application.Response;
@@ -115,7 +116,7 @@ namespace GTT.Infrastructure.Repositories
 
                 var queryTitle = await _connection.QueryFirstOrDefaultAsync(sql, parameter, _tran);
 
-                if(queryTitle != null)
+                if (queryTitle != null)
                 {
                     return new BaseResponseModel(HttpStatusCode.BadRequest, "Title must be unique");
                 }
@@ -145,10 +146,10 @@ namespace GTT.Infrastructure.Repositories
 
                 return new BaseResponseModel(result);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                var error = $"ClassRepository - {Helpers.BuildErrorMessage}";
-                throw new Exception(error, ex);
+                var error = $"ClassRepository - {Helpers.BuildErrorMessage(ex)}";
+                throw new Exception(error);
             }
         }
     }

@@ -3,22 +3,24 @@ using Dapper;
 using GTT.Application.Interfaces.Repositories;
 using GTT.Application.Requests;
 using GTT.Application;
+using GTT.Domain.Entities;
+using GTT.Application.Extensions;
 
 namespace GTT.Infrastructure.Repositories
 {
-    public class ExGroupRepository : IExGroupRepository
+    public class ExerciseGroupRepository : IExerciseGroupRepository
     {
         #region Private Members
         private readonly IDbConnection _connection;
         #endregion
 
         #region Constructors
-        public ExGroupRepository(IDbConnectionFactory dbConnectionFactory)
+        public ExerciseGroupRepository(IDbConnectionFactory dbConnectionFactory)
         {
             _connection = dbConnectionFactory.CreateConnection();
         }
-        
-        public ExGroupRepository(IDbConnection connection)
+
+        public ExerciseGroupRepository(IDbConnection connection)
         {
             _connection = connection;
         }
@@ -30,7 +32,7 @@ namespace GTT.Infrastructure.Repositories
             {
                 var query = @"INSERT INTO ExcerciseGroup (GroupNumber, GroupName, Community, Address, City, Quotation, Phone, IsActive)
                               VALUES (@groupNumber, @groupName, @community, @address, @city, @quotation, @phone, @isActive)";
-                
+
                 var queryParameters = new DynamicParameters();
                 queryParameters.Add("@groupNumber", request.GroupNumber);
                 queryParameters.Add("@groupName", request.GroupName);
@@ -44,6 +46,40 @@ namespace GTT.Infrastructure.Repositories
                 var result = await _connection.ExecuteAsync(query, queryParameters);
 
                 return result;
+            }
+            catch (Exception ex)
+            {
+                var error = $"ExGroupRepository - {Helpers.BuildErrorMessage(ex)}";
+                throw new Exception(error);
+            }
+        }
+
+        public async Task<ListExerciseGroupResponse> GetAllExGroup(int pageSize, int pageIndex, string filter)
+        {
+            try
+            {
+                var sql = @$"SELECT Id ,GroupNumber, GroupName, Community, Address, City, Quotation, Phone, IsActive
+                            FROM ExcerciseGroup
+                            {filter}
+                            ORDER BY GroupName ASC, Community ASC
+                            OFFSET @offset ROWS
+                            FETCH NEXT @limit ROW ONLY;
+                            SELECT COUNT(*) AS TotalRows FROM ExcerciseGroup;";
+
+                var queryParameters = new DynamicParameters();
+                queryParameters.Add("@limit", pageSize);
+                queryParameters.Add("@offset", (pageIndex - 1) * pageSize);
+
+                var query = await _connection.QueryMultipleAsync(sql, queryParameters, commandType: CommandType.Text);
+
+                var excerciseGroups = (await query.ReadAsync<ExerciseGroupResponse>()).ToList();
+                var totalRow = await query.ReadSingleOrDefaultAsync<long>();
+
+                return new ListExerciseGroupResponse
+                {
+                    ExcerciseGroups = excerciseGroups,
+                    TotalRow = (int)totalRow
+                };
             }
             catch (Exception ex)
             {

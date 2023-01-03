@@ -49,9 +49,9 @@ namespace GTT.Application.Commands
 
         internal class Handler : IRequestHandler<Command, BaseResponseModel>
         {
-            private IExGroupRepository _exGroupRepository;
+            private IExerciseGroupRepository _exGroupRepository;
 
-            public Handler(IExGroupRepository exGroupRepository)
+            public Handler(IExerciseGroupRepository exGroupRepository)
             {
                 _exGroupRepository = exGroupRepository;
             }

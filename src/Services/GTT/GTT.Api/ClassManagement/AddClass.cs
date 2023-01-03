@@ -9,7 +9,7 @@ using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
-using GTT.Application;
+using GTT.Application.Extensions;
 using GTT.Application.Response;
 
 namespace GTT_API.ClassManagement
