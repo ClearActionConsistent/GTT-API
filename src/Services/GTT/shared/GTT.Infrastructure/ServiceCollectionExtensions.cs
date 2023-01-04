@@ -40,6 +40,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient(typeof(IClassRepository), typeof(ClassRepository));
         services.AddTransient(typeof(IExerciseGroupRepository), typeof(ExerciseGroupRepository));
         services.AddTransient(typeof(IExerciseLibRepository), typeof(ExerciseLibRepository));
+        services.AddTransient(typeof(ICommunityRepository), typeof(CommunityRepository));
     }
     private static void AddOptions(IServiceCollection services)
     {
