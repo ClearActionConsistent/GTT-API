@@ -32,19 +32,24 @@ namespace GTT.Infrastructure.Repositories
         {
             try
             {
-                var checkId = await CheckClassExist(request.ClassId);
+                var checkClassId = await CheckClassExist(request.ClassId);
 
-                if (!checkId)
-                    return new BaseResponseModel(HttpStatusCode.NotFound, "Class Id invalid");
+                if (!checkClassId)
+                    return new BaseResponseModel(HttpStatusCode.NotFound, "Class Id Invalid");
+
+                var checkCommunityId = await CheckCommunityExist(request.CommunityId);
+
+                if (!checkCommunityId)
+                    return new BaseResponseModel(HttpStatusCode.NotFound, "Community Id Invalid");
 
                 var queryCheckName = @"SELECT Name FROM Exercise e
                                             WHERE e.Name = @ExName";
 
-                var query = @"INSERT INTO Exercise (ClassId, Name, Image, IsActive, CreatedDate, CreatedBy, UpdatedBy, UpdatedDate)
-                                VALUES (@ClassId, @ExName, @ExImage, @IsActive, @CreatedDate, @CreatedBy, @UpdateBy, @UpdatedDate)
+                var query = @"INSERT INTO Exercise (ClassId, Name, Image, IsActive, Description, FocusArea, Equipment, Video, CommunityId, CreatedDate, CreatedBy, UpdatedBy, UpdatedDate)
+                                VALUES (@ClassId, @ExName, @ExImage, @IsActive, @Description, @FocusArea, @Equipment, @Video, @CommunityId, @CreatedDate, @CreatedBy, @UpdateBy, @UpdatedDate)
                                 DECLARE @exerciseId int                             
                                 SET @exerciseId = SCOPE_IDENTITY()
-                                SELECT ExerciseId, ClassId, Name, Image, IsActive, CreatedBy, UpdatedBy, CreatedDate, UpdatedDate 
+                                SELECT ExerciseId, ClassId, CommunityId, Name, Image, Video, Description, FocusArea, Equipment, IsActive, IsDeleted, CreatedBy, UpdatedBy, CreatedDate, UpdatedDate 
                                 FROM Exercise WHERE ExerciseId = @exerciseId";
 
                 var parameters = new DynamicParameters();
@@ -52,6 +57,11 @@ namespace GTT.Infrastructure.Repositories
                 parameters.Add("@ExName", request.ExerciseName);
                 parameters.Add("@ExImage", request.ExerciseImage);
                 parameters.Add("@IsActive", request.IsActive);
+                parameters.Add("@Description", request.Description);
+                parameters.Add("@FocusArea", request.FocusArea);
+                parameters.Add("@Equipment", request.Equipment);
+                parameters.Add("@Video", request.ExerciseVideo);
+                parameters.Add("@CommunityId", request.CommunityId);
                 parameters.Add("@CreatedDate", request.CreatedDate);
                 parameters.Add("@CreatedBy", request.CreatedBy);
                 parameters.Add("@UpdateBy", request.UpdatedBy);
@@ -97,6 +107,24 @@ namespace GTT.Infrastructure.Repositories
                 throw new Exception(error);
             }
             
+        }
+
+        private async Task<bool> CheckCommunityExist(int Id)
+        {
+            try
+            {
+                var checkCommunityId = @"SELECT CommunityId FROM Community
+                                    WHERE CommunityId = @Id";
+                var resultCheck = await _connection.QueryFirstOrDefaultAsync(checkCommunityId, new { Id });
+
+                return resultCheck != null ? true : false;
+            }
+            catch (Exception ex)
+            {
+                var error = $"ExerciseLibRepository - {Helpers.BuildErrorMessage(ex)}";
+                throw new Exception(error);
+            }
+
         }
     }
 }
