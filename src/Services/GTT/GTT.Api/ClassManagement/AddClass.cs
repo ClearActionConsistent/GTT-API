@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using GTT.Application.Extensions;
 using GTT.Application.Response;
+using GTT.Api.Configuration;
 
 namespace GTT_API.ClassManagement
 {
@@ -30,12 +31,12 @@ namespace GTT_API.ClassManagement
         #endregion
 
         [Function("AddClass")]
-        [OpenApiOperation(nameof(AddClass), "Add Class")]
+        [OpenApiOperation(nameof(AddClass), "ClassManagement")]
         [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(CreateClassRequestModel), Required = true)]
         [OpenApiResponseWithBody(HttpStatusCode.OK, "application/json", bodyType: typeof(BaseResponseModel))]
         [OpenApiResponseWithBody(HttpStatusCode.BadRequest, "application/json", bodyType: typeof(BaseResponseModel))]
         [OpenApiResponseWithoutBody(HttpStatusCode.InternalServerError, Description = "Internal Server Error.")]
-        public async Task<HttpResponseData> AddClassHandler([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
+        public async Task<HttpResponseData> AddClassHandler([HttpTrigger(AuthorizationLevel.Function, "post",Route = Routes.ClassV1)] HttpRequestData req)
         {
             try
             {
