@@ -1,9 +1,4 @@
 ﻿using GTT.Application.Response;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GTT.Application.Requests.ExerciseLib
 {
@@ -15,11 +10,11 @@ namespace GTT.Application.Requests.ExerciseLib
 
         public int CommunityId { get; set; }
 
-        public string Description { get; set; } = string.Empty;
+        public string Description { get; set; }
 
         public string ExerciseImage { get; set; }
 
-        public string ExerciseVideo { get; set; } = string.Empty;
+        public string ExerciseVideo { get; set; }
 
         public string Equipment { get; set; }
 
