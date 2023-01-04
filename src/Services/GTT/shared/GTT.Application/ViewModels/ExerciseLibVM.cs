@@ -19,11 +19,11 @@ namespace GTT.Application.ViewModels
 
         public string Image { get; set; }
 
-        public string ExerciseVideo { get; set; } = string.Empty;
+        public string ExerciseVideo { get; set; }
 
-        public string Description { get; set; } = string.Empty;
+        public string Description { get; set; }
 
-        public string Equipment { get; set; }
+        public string Equipment { get; set; } 
 
         public string FocusArea { get; set; }
 
