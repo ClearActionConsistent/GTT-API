@@ -10,5 +10,7 @@ namespace GTT.Application.ViewModels
         public int CommunityId { get; set; }
         public int Duration { get; set; }
         public DateTime StartDate { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
