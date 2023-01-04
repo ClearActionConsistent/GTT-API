@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using GTT.Application;
 using GTT.Application.Extensions;
 using GTT.Application.Repositories;
@@ -145,7 +145,7 @@ namespace GTT.Infrastructure.Repositories
                 #endregion
 
                 sql = @"INSERT INTO Class
-                             VALUES(@title, @coachId, @communityId, @duration, @startDate, @createdBy, @updatedBy, @createdDate, @updatedDate, @IsActive);
+                             VALUES(@title, @coachId, @communityId, @duration, @startDate, @createdBy, @updatedBy, @createdDate, @updatedDate, @IsActive, @IsDeleted);
                              DECLARE @classId int                             
                              SET @classId = SCOPE_IDENTITY()
                              SELECT * FROM Class WHERE ClassId = @classId";
@@ -160,6 +160,7 @@ namespace GTT.Infrastructure.Repositories
                 parameter.Add("@createdDate", request.CreatedDate);
                 parameter.Add("@updatedDate", request.UpdatedDate);
                 parameter.Add("@IsActive", request.IsActive);
+                parameter.Add("@IsDeleted", request.IsDeleted);
 
                 var result = await _connection.QueryFirstAsync<ClassVM>(sql, parameter, _tran);
                 _tran.Commit();
