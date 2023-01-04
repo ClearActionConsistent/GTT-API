@@ -19,7 +19,7 @@ namespace GTT.Application.ViewModels
 
         public string Image { get; set; }
 
-        public string ExerciseVideo { get; set; } = null;
+        public string ExerciseVideo { get; set; } = string.Empty;
 
         public string Description { get; set; } = string.Empty;
 
@@ -27,7 +27,7 @@ namespace GTT.Application.ViewModels
 
         public string FocusArea { get; set; }
 
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
 
         public bool IsDeleted { get; set; } = false;
 

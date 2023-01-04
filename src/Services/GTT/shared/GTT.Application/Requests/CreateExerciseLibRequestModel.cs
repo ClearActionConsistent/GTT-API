@@ -19,7 +19,7 @@ namespace GTT.Application.Requests.ExerciseLib
 
         public string ExerciseImage { get; set; }
 
-        public string ExerciseVideo { get; set; } = null;
+        public string ExerciseVideo { get; set; } = string.Empty;
 
         public string Equipment { get; set; }
 
