@@ -11,12 +11,25 @@ namespace GTT.Application.ViewModels
     {
         public int ExerciseId { get; set; }
 
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; }
 
         public int ClassId { get; set; }
 
-        public string Image { get; set; } = String.Empty;
+        public int CommunityId { get; set; }
+
+        public string Image { get; set; }
+
+        public string ExerciseVideo { get; set; } = null;
+
+        public string Description { get; set; } = string.Empty;
+
+        public string Equipment { get; set; }
+
+        public string FocusArea { get; set; }
 
         public bool IsActive { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
+
     }
 }

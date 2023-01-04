@@ -13,7 +13,17 @@ namespace GTT.Application.Requests.ExerciseLib
 
         public int ClassId { get; set; }
 
-        public string ExerciseImage { get; set; } = null;
+        public int CommunityId { get; set; }
+
+        public string Description { get; set; } = string.Empty;
+
+        public string ExerciseImage { get; set; }
+
+        public string ExerciseVideo { get; set; } = null;
+
+        public string Equipment { get; set; }
+
+        public string FocusArea { get; set; }
 
         public bool IsActive { get; set; } = true;
     }

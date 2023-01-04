@@ -22,6 +22,19 @@ namespace GTT.Application.Commands.ExerciseLibrary
                     .NotEmpty().WithMessage("Class id is not empty")
                     .NotNull().WithMessage("Class id is not null")
                     .GreaterThan(0).WithMessage("Class id is greater than 0");
+                RuleFor(x => x.data.FocusArea)
+                    .NotEmpty().WithMessage("Focus Area is not empty")
+                    .NotNull().WithMessage("Focus Area is not null");
+                RuleFor(x => x.data.Equipment)
+                    .NotEmpty().WithMessage("Equipment is not empty")
+                    .NotNull().WithMessage("Equipment is not null");
+                RuleFor(x => x.data.ExerciseImage)
+                    .NotEmpty().WithMessage("Image is not empty")
+                    .NotNull().WithMessage("Image is not null");
+                RuleFor(x => x.data.CommunityId)
+                    .NotEmpty().WithMessage("Community id is not empty")
+                    .NotNull().WithMessage("Community id is not null")
+                    .GreaterThan(0).WithMessage("Community id is greater than 0");
             }
         }
 
