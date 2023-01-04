@@ -48,21 +48,36 @@ namespace GTT.Infrastructure.Repositories
 
         public async Task<int> DeleteAsync(int id)
         {
-            var insertChallengeSql = @"DELETE FROM Products WHERE Id = @Id";
-            var result = await _connection.ExecuteAsync(insertChallengeSql, new { Id = id }, _tran);
-            return result;
+            try
+            {
+                var sql = @"UPDATE c
+                           SET c.IsDeleted = 1
+                           FROM Class c
+                           WHERE c.ClassId = @classId";
+
+                var result = await _connection.ExecuteAsync(sql, new { classId = id }, _tran);
+                _tran.Commit();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var error = $"ClassRepository - {Helpers.BuildErrorMessage(ex)}";
+                throw new Exception(error);
+            }          
         }
 
         public async Task<IReadOnlyList<ClassVM>> GetAllAsync()
         {
             var insertChallengeSql = @"SELECT * FROM Challenge";
             var result = await _connection.QueryAsync<ClassVM>(insertChallengeSql, _tran);
-            return result.ToList();
+            return result.ToList(); 
         }
 
         public async Task<ClassVM> GetByIdAsync(int id)
         {
-            var query = @"SELECT c.ClassId,
+            try
+            {
+                var query = @"SELECT c.ClassId,
                                  c.Title,
                                  c.CoachId, 
                                  c.CommunityId, 
@@ -72,15 +87,21 @@ namespace GTT.Infrastructure.Repositories
                                  c.UpdatedBy, 
                                  c.CreatedDate,
                                  c.UpdatedDate,
-                                 c.IsActive
+                                 c.IsActive,
+                                 c.IsDeleted
                            FROM Class c WHERE ClassId = @Id";
 
-            var parameter = new DynamicParameters();
+                var parameter = new DynamicParameters();
+                parameter.Add("@ClassId", id);
 
-            parameter.Add("@ClassId", id);
-
-            var result = await _connection.QuerySingleOrDefaultAsync<ClassVM>(query, new { Id = id }, _tran);
-            return result;
+                var result = await _connection.QuerySingleOrDefaultAsync<ClassVM>(query, new { Id = id }, _tran);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                var error = $"ClassRepository - {Helpers.BuildErrorMessage(ex)}";
+                throw new Exception(error);
+            }
         }
 
         public async Task<int> UpdateAsync(ClassVM entity)
@@ -141,9 +162,7 @@ namespace GTT.Infrastructure.Repositories
                 parameter.Add("@IsActive", request.IsActive);
 
                 var result = await _connection.QueryFirstAsync<ClassVM>(sql, parameter, _tran);
-
                 _tran.Commit();
-
                 return new BaseResponseModel(result);
             }
             catch (Exception ex)
