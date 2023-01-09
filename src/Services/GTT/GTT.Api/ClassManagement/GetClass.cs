@@ -51,7 +51,7 @@ namespace GTT_API.ClassManagement
             }
             catch (ValidationException ex)
             {
-                var error = $"[AzureFunction] AddClass - {Helpers.BuildErrorMessage(ex)}";
+                var error = $"[AzureFunction] GetClass - {Helpers.BuildErrorMessage(ex)}";
                 _logger.LogError(error);
                 var response = req.CreateResponse();
                 await response.WriteAsJsonAsync(error, HttpStatusCode.BadRequest);
