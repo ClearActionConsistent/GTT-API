@@ -179,12 +179,11 @@ namespace GTT.Infrastructure.Repositories
             {
                 var sql = @$"SELECT ClassId, Title, CoachId, CommunityId, Duration, StartDate, 
                                 CreatedBy, UpdatedBy, CreatedDate, UpdatedDate, IsActive, IsDeleted
-                                FROM Class 
-                                {filter}
-	                            ORDER BY Title ASC, CommunityId, CoachId ASC
+                                FROM Class {filter} 
+                                ORDER BY Title ASC, CommunityId, CoachId ASC
                                 OFFSET @offset ROWS
-	                            FETCH NEXT @limit ROW ONLY;
-	                            SELECT COUNT(*) AS TotalRows FROM Class;";
+                                FETCH NEXT @limit ROW ONLY;
+                                SELECT COUNT(*) AS TotalRows FROM Class;";
 
                 var queryParameters = new DynamicParameters();
                 queryParameters.Add("@limit", pageSize);
