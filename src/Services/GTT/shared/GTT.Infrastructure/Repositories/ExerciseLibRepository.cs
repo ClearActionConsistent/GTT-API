@@ -91,6 +91,40 @@ namespace GTT.Infrastructure.Repositories
             }
         }
 
+        public async Task<ListExerciseLibraryResponse> GetAllExerciseLib(int pageSize, int pageIndex, string filter)
+        {
+            try
+            {
+                var sql = @$"SELECT ExerciseId, Name, Image
+                            FROM Exercise
+                            {filter}
+                            ORDER BY Name ASC
+                            OFFSET @offset ROWS
+                            FETCH NEXT @limit ROW ONLY;
+                            SELECT COUNT(*) AS TotalRows FROM Exercise;";
+
+                var queryParameters = new DynamicParameters();
+                queryParameters.Add("@limit", pageSize);
+                queryParameters.Add("@offset", (pageIndex - 1) * pageSize);
+
+                var query = await _connection.QueryMultipleAsync(sql, queryParameters, commandType: CommandType.Text);
+
+                var excerciseLib = (await query.ReadAsync<ExerciseLibraryResponse>()).ToList();
+                var totalRow = await query.ReadSingleOrDefaultAsync<long>();
+
+                return new ListExerciseLibraryResponse
+                {
+                    ExcerciseLibrary = excerciseLib,
+                    TotalRow = (int)totalRow
+                };
+            }
+            catch (Exception ex)
+            {
+                var error = $"ExerciseLibRepository - {Helpers.BuildErrorMessage(ex)}";
+                throw new Exception(error);
+            }
+        }
+
         private async Task<bool> CheckClassExist(int Id)
         {
             try
