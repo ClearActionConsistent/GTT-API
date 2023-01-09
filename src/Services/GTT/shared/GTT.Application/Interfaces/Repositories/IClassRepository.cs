@@ -8,5 +8,6 @@ namespace GTT.Application.Repositories
     public interface IClassRepository : IGenericRepository<ClassVM>
     {
         Task<BaseResponseModel> CreateClass(CreateClassRequestModel request);
+        Task<ListClassResponse> GetAllClass(int pageSize, int pageIndex, string filter);
     }
 }
