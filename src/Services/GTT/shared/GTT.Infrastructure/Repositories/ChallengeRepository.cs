@@ -1,9 +1,11 @@
 ﻿using Dapper;
 using GTT.Application;
+using GTT.Application.Extensions;
 using GTT.Application.Repositories;
 using GTT.Application.Requests;
 using GTT.Application.Response;
 using GTT.Application.ViewModels;
+using GTT.Domain.Entities;
 using System.Data;
 using System.Net;
 
@@ -64,6 +66,46 @@ namespace GTT.Infrastructure.Repositories
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ListChallengeResponse> GetAllAsync(int pageSize, int pageIndex)
+        {
+            try
+            {
+                var sql = @"SELECT ChallengeID
+                                  ,Calories
+                                  ,SplatPoints
+                                  ,AvgHR
+                                  ,MaxHR
+                                  ,Miles
+                                  ,Steps
+                                  ,ClassID
+                            FROM Challenge
+                            ORDER BY UpdatedDate DESC
+                            OFFSET @offset ROWS
+                            FETCH NEXT @limit ROW ONLY;
+                            SELECT COUNT(*) AS TotalRows FROM Challenge;";
+
+                var queryParameters = new DynamicParameters();
+                queryParameters.Add("@limit", pageSize);
+                queryParameters.Add("@offset", (pageIndex - 1) * pageSize);
+
+                var query = await _connection.QueryMultipleAsync(sql, queryParameters, commandType: CommandType.Text);
+
+                var challenges = (await query.ReadAsync<ChallengeResponse>()).ToList();
+                var totalRow = await query.ReadSingleOrDefaultAsync<long>();
+
+                return new ListChallengeResponse
+                {
+                    Challenges = challenges,
+                    TotalRow = (int)totalRow
+                };
+            }
+            catch (Exception ex)
+            {
+                var error = $"ChallengeRepository - {Helpers.BuildErrorMessage(ex)}";
+                throw new Exception(error);
             }
         }
 
