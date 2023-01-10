@@ -5,7 +5,7 @@ namespace GTT.Application.ViewModels
     public class ClassVM : BaseModel
     {
         public int ClassId { get; set; }
-        public string Title { get; set; } = String.Empty;
+        public string Title { get; set; }
         public int CoachId { get; set; }
         public int CommunityId { get; set; }
         public int Duration { get; set; }

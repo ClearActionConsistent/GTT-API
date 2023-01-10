@@ -172,5 +172,41 @@ namespace GTT.Infrastructure.Repositories
                 throw new Exception(error);
             }
         }
+
+        public async Task<ListClassResponse> GetAllClass(int pageSize, int pageIndex, string filter)
+        {
+            try
+            {
+                var sql = @$"SELECT ClassId, Title, CoachId, CommunityId, Duration, StartDate, 
+                                CreatedBy, UpdatedBy, CreatedDate, UpdatedDate, IsActive, IsDeleted
+                                FROM Class {filter} 
+                                ORDER BY Title ASC, CommunityId, CoachId ASC
+                                OFFSET @offset ROWS
+                                FETCH NEXT @limit ROW ONLY;
+                                SELECT COUNT(*) AS TotalRows FROM Class;";
+
+                var queryParameters = new DynamicParameters();
+                queryParameters.Add("@limit", pageSize);
+                queryParameters.Add("@offset", (pageIndex - 1) * pageSize);
+
+                var query = await _connection.QueryMultipleAsync(sql, queryParameters, commandType: CommandType.Text, transaction: _tran);
+
+                var classes = (await query.ReadAsync<ClassResponse>()).ToList();
+                var totalRow = await query.ReadSingleOrDefaultAsync<long>();
+
+                _tran.Commit();
+
+                return new ListClassResponse
+                {
+                    Classes = classes,
+                    TotalRow = (int)totalRow
+                };
+            }
+            catch (Exception ex)
+            {
+                var error = $"ClassRepository - {Helpers.BuildErrorMessage(ex)}";
+                throw new Exception(error);
+            }
+        }
     }
 }
