@@ -1,8 +1,6 @@
 using FluentValidation;
 using GTT.Application;
 using GTT.Application.Behaviors;
-using GTT.Application.Commands;
-using GTT.Application.Commands.ExerciseLibrary;
 using GTT.Application.Interfaces.Repositories;
 using GTT.Application.Repositories;
 using GTT.Infrastructure.Data;
