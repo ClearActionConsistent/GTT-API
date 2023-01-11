@@ -208,5 +208,37 @@ namespace GTT.Infrastructure.Repositories
                 throw new Exception(error);
             }
         }
+
+        public async Task<int> UpdateClass(UpdateClassData data)
+        {
+            try
+            {
+                var sql = @"UPDATE Class
+                                SET CoachId = @coachId, Title= @title,
+                                CommunityId = @communityId, Duration = @duration, 
+                                StartDate = @startDate, UpdatedBy = @updatedBy,
+                                UpdatedDate= @updatedDate WHERE ClassId = @classId;";
+
+                var queryParameters = new DynamicParameters();
+                queryParameters.Add("@title", data.Title);
+                queryParameters.Add("@coachId", data.CoachId);
+                queryParameters.Add("@communityId", data.CommunityId);
+                queryParameters.Add("@duration", data.Duration);
+                queryParameters.Add("@startDate", data.StartDate);
+                queryParameters.Add("@updatedBy", data.UpdatedBy);
+                queryParameters.Add("@updatedDate", data.UpdatedDate);
+                queryParameters.Add("@classId", data.ClassId);
+
+                var query = await _connection.ExecuteAsync(sql, queryParameters, commandType: CommandType.Text, transaction: _tran);
+                _tran.Commit();
+
+                return query > 0 ? query : 0;
+            }
+            catch(Exception)
+            {
+                return -1;
+            }
+        }
+
     }
 }

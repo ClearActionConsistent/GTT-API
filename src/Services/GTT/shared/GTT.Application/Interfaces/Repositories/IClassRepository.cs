@@ -1,7 +1,7 @@
 ﻿using GTT.Application.Requests;
 using GTT.Application.Response;
 using GTT.Application.ViewModels;
-using GTT.Domain.Entities;
+
 
 namespace GTT.Application.Repositories
 {
@@ -9,5 +9,6 @@ namespace GTT.Application.Repositories
     {
         Task<BaseResponseModel> CreateClass(CreateClassRequestModel request);
         Task<ListClassResponse> GetAllClass(int pageSize, int pageIndex, string filter);
+        Task<int> UpdateClass(UpdateClassData data);
     }
 }
