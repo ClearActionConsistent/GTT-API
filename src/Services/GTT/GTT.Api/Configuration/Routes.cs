@@ -20,7 +20,8 @@ public static class Routes
     /// Challenge route 
     /// </summary>
     #region ChallengeManagement
-    public const string CreateChallenge = "v1/insert-challenge";
+    public const string CreateChallenge = "v1/add-challenge";
+    public const string GetAllChallenge = "v1/challenge";
     #endregion
 
     /// <summary>
