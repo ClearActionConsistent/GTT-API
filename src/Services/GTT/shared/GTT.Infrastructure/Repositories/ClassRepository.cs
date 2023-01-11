@@ -213,19 +213,11 @@ namespace GTT.Infrastructure.Repositories
         {
             try
             {
-                var classInformation = await GetByIdAsync(data.ClassId);
-
-                if (classInformation == null)
-                {
-                    return -1;
-                };
-
                 var sql = @"UPDATE Class
                                 SET CoachId = @coachId, Title= @title,
                                 CommunityId = @communityId, Duration = @duration, 
                                 StartDate = @startDate, UpdatedBy = @updatedBy,
-                                UpdatedDate= @updatedDate
-                                WHERE ClassId = @classId;";
+                                UpdatedDate= @updatedDate WHERE ClassId = @classId;";
 
                 var queryParameters = new DynamicParameters();
                 queryParameters.Add("@title", data.Title);
@@ -242,9 +234,9 @@ namespace GTT.Infrastructure.Repositories
 
                 return query > 0 ? query : 0;
             }
-            catch(Exception ex)
+            catch(Exception)
             {
-                throw new Exception(ex.Message);
+                return -1;
             }
         }
 

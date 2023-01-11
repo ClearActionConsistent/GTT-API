@@ -38,11 +38,18 @@ namespace GTT.Application.Commands
                 {
                     //handle request command to update class information
 
+                    var isClass = await _classRepository.GetByIdAsync(request.classData.ClassId);
+
+                    if (isClass == null)
+                    {
+                        return new BaseResponseModel(HttpStatusCode.NotFound, "ClassId is invalid");
+                    }
+
                     var result = await _classRepository.UpdateClass(request.classData);
 
                     if (result == -1)
                     {
-                        return new BaseResponseModel(HttpStatusCode.NotFound, "ClassId is invalid");
+                        return new BaseResponseModel(HttpStatusCode.InternalServerError, "Something wrong happened");
                     }
 
                     if (result == 0)
