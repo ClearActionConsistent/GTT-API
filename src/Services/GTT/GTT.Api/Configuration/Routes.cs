@@ -29,6 +29,14 @@ public static class Routes
     /// </summary>
     #region ExerciseManagement
     public const string ExerciseLibrary = "v1/excercise-library";
+    public const string ExerciseLibraryImage = "v1/excercise-library/upload-image";
     public const string GetExGroup = "v1/excercise-group";
+    #endregion
+
+    /// <summary>
+    /// Azure storage 
+    /// </summary>
+    #region AzureStorage
+    public const string UploadImage = "v1/azure-storage/upload-image";
     #endregion
 }
