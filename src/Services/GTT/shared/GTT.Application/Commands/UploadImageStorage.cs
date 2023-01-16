@@ -34,15 +34,17 @@ namespace GTT.Application.Commands
 
                 var file = command.data.Files.FirstOrDefault();
 
-                if (!file.ContentType.Contains(Constants.AzureStorageImage.Type))
+                var allowUploadedImageTypes = Constants.AzureStorageImage.AllowUploadedImageFileTypes;
+
+                if (!allowUploadedImageTypes.Any(file.ContentType.Contains))
                 {
                     return new BaseResponseModel(HttpStatusCode.InternalServerError, "File Type Should Be Image");
                 }
 
                 var data = file.Data;
-                if (ConvertBytesToMegabytes(data.Length) > Constants.AzureStorageImage.Size)
+                if (ConvertBytesToMegabytes(data.Length) > Constants.AzureStorageImage.UploadedImageFileSize)
                 {
-                    return new BaseResponseModel(HttpStatusCode.InternalServerError, "File Size Too Large, Must Be Less Than 10MB");
+                    return new BaseResponseModel(HttpStatusCode.InternalServerError, $"File Size Too Large, Must Be Less Than {Constants.AzureStorageImage.UploadedImageFileSize}");
                 }
 
                 await data.CopyToAsync(myBlob);
@@ -53,12 +55,12 @@ namespace GTT.Application.Commands
                 var blob = blobClient.GetBlobClient(file.FileName);
                 await blob.UploadAsync(myBlob);
 
-                var result = new UploadImage { ImageUrl = blob.Uri.AbsoluteUri };
+                var result = new UploadImageResponse { ImageUrl = blob.Uri.AbsoluteUri };
 
                 return new BaseResponseModel(result);
             }
 
-            static double ConvertBytesToMegabytes(long bytes)
+            private static double ConvertBytesToMegabytes(long bytes)
             {
                 return (bytes / 1024f) / 1024f;
             }

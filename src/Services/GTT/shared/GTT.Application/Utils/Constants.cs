@@ -10,8 +10,8 @@ namespace GTT.Application.Utils
     {
         public class AzureStorageImage
         {
-            public const string Type = "image";
-            public const int Size = 10;
+            public static readonly string[] AllowUploadedImageFileTypes = {"jpg", "png", "gif", "jpeg"};
+            public const int UploadedImageFileSize = 1;
         }
     }
 }

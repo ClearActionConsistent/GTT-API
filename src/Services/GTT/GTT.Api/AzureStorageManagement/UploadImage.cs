@@ -30,7 +30,7 @@ namespace GTT_API.AzureStorageManagement
         #endregion
 
         [OpenApiOperation(nameof(UploadImage), "AzureStorage")]
-        [OpenApiRequestBody(contentType: "multipart/form-data", bodyType: typeof(MultiPartFormDataModel), Required = true, Description = "Image data")]
+        [OpenApiRequestBody(contentType: "multipart/form-data", bodyType: typeof(UploadImageData), Required = true, Description = "Image data")]
         [OpenApiResponseWithBody(HttpStatusCode.OK, "application/json", bodyType: typeof(BaseResponseModel))]
         [OpenApiResponseWithBody(HttpStatusCode.BadRequest, "application/json", bodyType: typeof(BaseResponseModel))]
         [OpenApiResponseWithoutBody(HttpStatusCode.InternalServerError, Description = "Internal Server Error.")]

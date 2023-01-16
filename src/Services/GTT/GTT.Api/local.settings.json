@@ -5,7 +5,7 @@
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
     "SqlOptions__SqlConnectionString": "Data Source=VPHUDUC;Initial Catalog= GTT; database = GTT; User ID=sa;Password=123456",
     "SqlOptions__SqlUseAccessToken": "false",
-    "AzureWebJobsStorageImage": "fffff",
-    "ContainerName": "fffffff"
+    "UploadImageOptions__AzureWebJobsStorageImage": "",
+    "UploadImageOptions__ContainerName": ""
   }
 }
