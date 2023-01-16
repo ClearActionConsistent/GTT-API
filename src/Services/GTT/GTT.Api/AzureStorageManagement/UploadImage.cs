@@ -18,7 +18,7 @@ namespace GTT_API.AzureStorageManagement
         #region Private Members
         private readonly ILogger _logger;
         private readonly IMediator _mediator;
-        #endregion
+        #endregion 
 
         #region Constructors
         public UploadImage(ILoggerFactory loggerFactory, IMediator mediator)
