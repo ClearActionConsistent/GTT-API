@@ -31,4 +31,11 @@ public static class Routes
     public const string ExerciseLibrary = "v1/excercise-library";
     public const string GetExGroup = "v1/excercise-group";
     #endregion
+
+    ///<summary>
+    /// Sports Route
+    /// </summary>
+    #region Sports Management
+    public const string CreateSport = "v1/sports";
+    #endregion
 }
