@@ -26,12 +26,12 @@ namespace GTT.Infrastructure.Repositories
         }
         #endregion
 
-        public async Task<int> CreateSports(CreateSportRequestModel request)
+        public async Task<int> CreateSport(CreateSportRequestModel request)
         {
             try
             {
-                var query = @"INSERT INTO Sports(SportImage, SportName, SportType, IsActive)
-                              VALUES (@sportImage, @sportName, @sportType, @isActive)";
+                var query = @"INSERT INTO Sports(SportImage, SportName, SportType, CreatedBy, IsActive)
+                              VALUES (@sportImage, @sportName, @sportType, NULL, @isActive)";
 
                 var queryParameters = new DynamicParameters();
                 queryParameters.Add("@sportImage", request.SportImage);

@@ -7,7 +7,7 @@ using GTT.Application.Interfaces.Repositories;
 
 namespace GTT.Application.Commands
 {
-    public class CreateSports
+    public class CreateSport
     {
         public record Command(
         CreateSportRequestModel data
@@ -38,7 +38,7 @@ namespace GTT.Application.Commands
             public async Task<BaseResponseModel> Handle(Command command, CancellationToken cancellationToken)
             {
                 //handle request command to create sport information
-                var result = await _sportsRepository.CreateSports(command.data);
+                var result = await _sportsRepository.CreateSport(command.data);
                 if (result >= 0)
                 {
                     return new BaseResponseModel(HttpStatusCode.OK, "Success");

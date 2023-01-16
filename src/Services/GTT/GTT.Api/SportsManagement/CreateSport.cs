@@ -15,7 +15,7 @@ using GTT.Application.Response;
 
 namespace GTT_API.ExcerciseGroupManagement
 {
-    public class CreateSportsFunction
+    public class CreateSport
     {
         #region Private Members
         private readonly ILogger _logger;
@@ -23,16 +23,16 @@ namespace GTT_API.ExcerciseGroupManagement
         #endregion
 
         #region Constructors
-        public CreateSportsFunction(ILoggerFactory loggerFactory, IMediator mediator)
+        public CreateSport(ILoggerFactory loggerFactory, IMediator mediator)
         {
-            _logger = loggerFactory.CreateLogger<CreateSportsFunction>();
+            _logger = loggerFactory.CreateLogger<CreateSport>();
             _mediator = mediator;
         }
         #endregion
 
         #region Azure Function
-        [Function("CreateSportsFunction")]
-        [OpenApiOperation(nameof(CreateSportsFunction), "Sports")]
+        [Function("CreateSport")]
+        [OpenApiOperation(nameof(CreateSport), "Sports")]
         [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(CreateSportRequestModel), Required = true)]
         [OpenApiResponseWithBody(HttpStatusCode.OK, "application/json", bodyType: typeof(BaseResponseModel))]
         [OpenApiResponseWithBody(HttpStatusCode.BadRequest, "application/json", bodyType: typeof(BaseResponseModel))]
@@ -44,7 +44,7 @@ namespace GTT_API.ExcerciseGroupManagement
                 _logger.LogInformation("C# HTTP Trigger function CreateSportsFunction request.");
                 var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 var data = JsonConvert.DeserializeObject<CreateSportRequestModel>(requestBody);
-                var result = await _mediator.Send(new CreateSports.Command(data));
+                var result = await _mediator.Send(new GTT.Application.Commands.CreateSport.Command(data));
                 var respone = req.CreateResponse();
                 await respone.WriteAsJsonAsync(result, result.Status);
 
