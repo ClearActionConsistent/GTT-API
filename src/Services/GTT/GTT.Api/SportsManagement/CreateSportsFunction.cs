@@ -15,7 +15,7 @@ using GTT.Application.Response;
 
 namespace GTT_API.ExcerciseGroupManagement
 {
-    public class CreateExerciseGroup
+    public class CreateSportsFunction
     {
         #region Private Members
         private readonly ILogger _logger;
@@ -23,47 +23,49 @@ namespace GTT_API.ExcerciseGroupManagement
         #endregion
 
         #region Constructors
-        public CreateExerciseGroup(ILoggerFactory loggerFactory, IMediator mediator)
+        public CreateSportsFunction(ILoggerFactory loggerFactory, IMediator mediator)
         {
-            _logger = loggerFactory.CreateLogger<CreateExerciseGroup>();
+            _logger = loggerFactory.CreateLogger<CreateSportsFunction>();
             _mediator = mediator;
         }
         #endregion
 
         #region Azure Function
-        [Function("CreateExcerciseGroup")]
-        [OpenApiOperation(nameof(CreateExerciseGroup), "Excercise")]
-        [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(ExGroupRequestModel), Required = true)]
+        [Function("CreateSportsFunction")]
+        [OpenApiOperation(nameof(CreateSportsFunction), "Sports")]
+        [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(CreateSportRequestModel), Required = true)]
         [OpenApiResponseWithBody(HttpStatusCode.OK, "application/json", bodyType: typeof(BaseResponseModel))]
         [OpenApiResponseWithBody(HttpStatusCode.BadRequest, "application/json", bodyType: typeof(BaseResponseModel))]
         [OpenApiResponseWithoutBody(HttpStatusCode.InternalServerError, Description = "Internal Server Error.")]
-        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Routes.CreateExGroup)] HttpRequestData req)
+        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Routes.CreateSports)] HttpRequestData req)
         {
             try
             {
-                _logger.LogInformation("C# HTTP Trigger function CreateExcerciseGroup request.");
+                _logger.LogInformation("C# HTTP Trigger function CreateSportsFunction request.");
                 var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                var data = JsonConvert.DeserializeObject<ExGroupRequestModel>(requestBody);
-                var result = await _mediator.Send(new CreateExGroup.Command(data));
+                var data = JsonConvert.DeserializeObject<CreateSportRequestModel>(requestBody);
+                var result = await _mediator.Send(new CreateSports.Command(data));
                 var respone = req.CreateResponse();
-                await respone.WriteAsJsonAsync(result);
+                await respone.WriteAsJsonAsync(result, result.Status);
 
                 return respone;
             }
             catch (ValidationException ex)
             {
-                var error = $"[AzureFunction] CreateExcerciseGroup - {Helpers.BuildErrorMessage(ex)}";
+                var error = $"[AzureFunction] CreateSportsFunction - {Helpers.BuildErrorMessage(ex)}";
                 _logger.LogError(error);
                 var response = req.CreateResponse();
-                await response.WriteAsJsonAsync(error, HttpStatusCode.BadRequest);
+                await response.WriteAsJsonAsync(ex, HttpStatusCode.BadRequest);
+
                 return response;
             }
             catch (Exception ex)
             {
-                var error = $"[AzureFunction] CreateExcerciseGroup - {Helpers.BuildErrorMessage(ex)}";
+                var error = $"[AzureFunction] CreateSportsFunction - {Helpers.BuildErrorMessage(ex)}";
                 _logger.LogError(error);
                 var response = req.CreateResponse();
                 await response.WriteAsJsonAsync(error, HttpStatusCode.InternalServerError);
+
                 return response;
             }
         }
