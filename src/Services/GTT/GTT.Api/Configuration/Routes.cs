@@ -37,6 +37,7 @@ public static class Routes
     /// </summary>
     #region AzureStorage
     public const string UploadImage = "v1/azure-storage/upload-image";
+    #endregion
 
     ///<summary>
     /// Sports Route

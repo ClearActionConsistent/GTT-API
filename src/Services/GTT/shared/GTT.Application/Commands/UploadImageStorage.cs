@@ -26,7 +26,7 @@ namespace GTT.Application.Commands
             }
             public async Task<BaseResponseModel> Handle(Command command, CancellationToken cancellationToken)
             {
-                var connection = _settings.Value.AzureWebJobsStorage;
+                var connection = _settings.Value.AzureWebJobsStorageImage;
 
                 var container = _settings.Value.ContainerName;
 
@@ -38,13 +38,13 @@ namespace GTT.Application.Commands
 
                 if (!allowUploadedImageTypes.Any(file.ContentType.Contains))
                 {
-                    return new BaseResponseModel(HttpStatusCode.InternalServerError, "File Type Should Be Image");
+                    return new BaseResponseModel(HttpStatusCode.InternalServerError, "File type is not support for application");
                 }
 
                 var data = file.Data;
                 if (ConvertBytesToMegabytes(data.Length) > Constants.AzureStorageImage.UploadedImageFileSize)
                 {
-                    return new BaseResponseModel(HttpStatusCode.InternalServerError, $"File Size Too Large, Must Be Less Than {Constants.AzureStorageImage.UploadedImageFileSize}");
+                    return new BaseResponseModel(HttpStatusCode.InternalServerError, $"File Size Too Large, Must Be Less Than {Constants.AzureStorageImage.UploadedImageFileSize} MB");
                 }
 
                 await data.CopyToAsync(myBlob);

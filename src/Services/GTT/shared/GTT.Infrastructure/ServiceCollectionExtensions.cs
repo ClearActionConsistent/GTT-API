@@ -52,7 +52,7 @@ public static class ServiceCollectionExtensions
         services.AddOptions<AzureStorageOptions>()
             .Configure<IConfiguration>((options, configuration) =>
             {
-                options.AzureWebJobsStorage = configuration.GetValue<string>("UploadImageOptions:AzureWebJobsStorageImage");
+                options.AzureWebJobsStorageImage = configuration.GetValue<string>("UploadImageOptions:AzureWebJobsStorageImage");
                 options.ContainerName = configuration.GetValue<string>("UploadImageOptions:ContainerName");
             });
     }

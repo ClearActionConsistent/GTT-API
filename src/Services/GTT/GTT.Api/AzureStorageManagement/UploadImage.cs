@@ -4,7 +4,6 @@ using GTT.Application.Commands;
 using GTT.Application.Extensions;
 using GTT.Application.Requests;
 using GTT.Application.Response;
-using GTT_API.ExcerciseGroupManagement.ExcerciseGroupManagement;
 using HttpMultipartParser;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
@@ -24,7 +23,7 @@ namespace GTT_API.AzureStorageManagement
         #region Constructors
         public UploadImage(ILoggerFactory loggerFactory, IMediator mediator)
         {
-            _logger = loggerFactory.CreateLogger<GetExerciseGroup>();
+            _logger = loggerFactory.CreateLogger<UploadImage>();
             _mediator = mediator;
         }
         #endregion

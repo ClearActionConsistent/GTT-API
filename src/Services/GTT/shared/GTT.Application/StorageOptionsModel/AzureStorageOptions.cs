@@ -8,7 +8,7 @@ namespace GTT.Application.StorageOptionsModel
 {
     public class AzureStorageOptions
     {
-        public string AzureWebJobsStorage { get; set; }
+        public string AzureWebJobsStorageImage { get; set; }
         public string ContainerName { get; set; }
     }
 }
