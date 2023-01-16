@@ -3,6 +3,7 @@ using GTT.Application;
 using GTT.Application.Behaviors;
 using GTT.Application.Interfaces.Repositories;
 using GTT.Application.Repositories;
+using GTT.Application.StorageOptionsModel;
 using GTT.Infrastructure.Data;
 using GTT.Infrastructure.Repositories;
 using MediatR;
@@ -46,6 +47,13 @@ public static class ServiceCollectionExtensions
             {
                 options.SqlConnectionString = configuration.GetValue<string>("SqlOptions:SqlConnectionString");
                 options.SqlUseAccessToken = configuration.GetValue<bool>("SqlOptions:SqlUseAccessToken");
+            });
+
+        services.AddOptions<AzureStorageOptions>()
+            .Configure<IConfiguration>((options, configuration) =>
+            {
+                options.AzureWebJobsStorageImage = configuration.GetValue<string>("UploadImageOptions:AzureWebJobsStorageImage");
+                options.ContainerName = configuration.GetValue<string>("UploadImageOptions:ContainerName");
             });
     }
 }

@@ -4,6 +4,8 @@
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
     "SqlOptions__SqlConnectionString": "Data Source=tcp:alexdev.database.windows.net;Initial Catalog=alex;Persist Security Info=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;User ID=ffffff;Password=ffffff;",
-    "SqlOptions__SqlUseAccessToken": "false"
+    "SqlOptions__SqlUseAccessToken": "false",
+    "UploadImageOptions__AzureWebJobsStorageImage": "",
+    "UploadImageOptions__ContainerName": ""
   }
 }

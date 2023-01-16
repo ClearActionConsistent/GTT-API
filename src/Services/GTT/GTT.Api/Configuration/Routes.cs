@@ -32,6 +32,13 @@ public static class Routes
     public const string GetExGroup = "v1/excercise-group";
     #endregion
 
+    /// <summary>
+    /// Azure storage 
+    /// </summary>
+    #region AzureStorage
+    public const string UploadImage = "v1/azure-storage/upload-image";
+    #endregion
+
     ///<summary>
     /// Sports Route
     /// </summary>
