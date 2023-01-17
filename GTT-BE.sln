@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32421.90
@@ -18,6 +18,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GTT.Domain", "src\Services\GTT\shared\GTT.Domain\GTT.Domain.csproj", "{5AA0F734-5FAB-45C5-88C3-D6C663B268C1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GTT.Infrastructure", "src\Services\GTT\shared\GTT.Infrastructure\GTT.Infrastructure.csproj", "{B7E580EE-6724-4016-8E82-94670A04FCCD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tets", "tets", "{314BCB83-01AF-41D6-B433-94E0451DBFE7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "database", "database", "{42ED5D74-99A3-4854-9F26-96C5969F000E}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "GTT.Database", "GTT.Database\GTT.Database.sqlproj", "{4E083AC2-A867-4D27-9B3B-2B55F77F520D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
