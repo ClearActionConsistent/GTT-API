@@ -2,13 +2,7 @@
 using GTT.Application.Extensions;
 using GTT.Application.Interfaces.Repositories;
 using GTT.Application.Response;
-using GTT.Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GTT.Application.Queries
 {

@@ -3,13 +3,7 @@ using GTT.Application;
 using GTT.Application.Extensions;
 using GTT.Application.Interfaces.Repositories;
 using GTT.Application.Response;
-using GTT.Domain.Entities;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GTT.Infrastructure.Repositories
 {

@@ -2,16 +2,13 @@ using System.Net;
 using FluentValidation;
 using GTT.Api.Configuration;
 using GTT.Application.Extensions;
-using GTT.Application.Queries;
 using GTT.Application.Response;
-using GTT_API.ExerciseLibraryManagement;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
 
 namespace GTT_API.GroupManagement
 {
@@ -38,7 +35,7 @@ namespace GTT_API.GroupManagement
         [OpenApiResponseWithBody(HttpStatusCode.NotFound, "application/json", bodyType: typeof(BaseResponseModel))]
         [OpenApiResponseWithoutBody(HttpStatusCode.InternalServerError, Description = "Internal Server Error.")]
         public async Task<HttpResponseData> RunAsync([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Routes.Group)] HttpRequestData req,
-            int pageSize, int pageIndex, string keyword)
+            int pageSize, int pageIndex)
         {
             try
             {
