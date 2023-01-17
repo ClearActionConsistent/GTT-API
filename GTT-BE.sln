@@ -1,4 +1,3 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32421.90
@@ -19,11 +18,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GTT.Domain", "src\Services\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GTT.Infrastructure", "src\Services\GTT\shared\GTT.Infrastructure\GTT.Infrastructure.csproj", "{B7E580EE-6724-4016-8E82-94670A04FCCD}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tets", "tets", "{314BCB83-01AF-41D6-B433-94E0451DBFE7}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "database", "database", "{42ED5D74-99A3-4854-9F26-96C5969F000E}"
-EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "GTT.Database", "GTT.Database\GTT.Database.sqlproj", "{4E083AC2-A867-4D27-9B3B-2B55F77F520D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,12 +42,6 @@ Global
 		{B7E580EE-6724-4016-8E82-94670A04FCCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7E580EE-6724-4016-8E82-94670A04FCCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7E580EE-6724-4016-8E82-94670A04FCCD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E083AC2-A867-4D27-9B3B-2B55F77F520D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4E083AC2-A867-4D27-9B3B-2B55F77F520D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4E083AC2-A867-4D27-9B3B-2B55F77F520D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{4E083AC2-A867-4D27-9B3B-2B55F77F520D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4E083AC2-A867-4D27-9B3B-2B55F77F520D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4E083AC2-A867-4D27-9B3B-2B55F77F520D}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,7 +54,6 @@ Global
 		{4591F98C-ED52-4C8C-A86D-80070D01BA15} = {7BBB383C-7D78-47D2-BAD4-622DDA0A367A}
 		{5AA0F734-5FAB-45C5-88C3-D6C663B268C1} = {7BBB383C-7D78-47D2-BAD4-622DDA0A367A}
 		{B7E580EE-6724-4016-8E82-94670A04FCCD} = {7BBB383C-7D78-47D2-BAD4-622DDA0A367A}
-		{314BCB83-01AF-41D6-B433-94E0451DBFE7} = {7A14BDC2-5488-4B4C-8ACF-89AE4CF11314}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BB06DFFA-6DDB-40CF-8AD8-5F93CF1A33AE}
