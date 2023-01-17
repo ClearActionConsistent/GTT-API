@@ -15,15 +15,10 @@ env:
 
 jobs:
   build-and-deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: "Checkout GitHub Action"
         uses: actions/checkout@v2
-
-      - name: Setup DotNet 4.7.2 Environment
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 4.7.x
 
       - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
         uses: actions/setup-dotnet@v1
