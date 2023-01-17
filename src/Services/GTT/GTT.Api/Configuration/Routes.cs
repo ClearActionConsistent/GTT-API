@@ -33,6 +33,13 @@ public static class Routes
     #endregion
 
     /// <summary>
+    /// Group route 
+    /// </summary>
+    #region GroupManagement
+    public const string Group = "v1/groups";
+    #endregion
+
+    /// <summary>
     /// Azure storage 
     /// </summary>
     #region AzureStorage
