@@ -23,7 +23,7 @@ jobs:
       - name: Setup DotNet 4.7.2 Environment
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 4.7.2
+          dotnet-version: 4.7.x
 
       - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
         uses: actions/setup-dotnet@v1
