@@ -34,7 +34,7 @@ namespace GTT_API.SportsManagement
         [OpenApiResponseWithBody(HttpStatusCode.OK, "application/json", bodyType: typeof(GTTPageResults<ListSportsResponse>))]
         [OpenApiResponseWithBody(HttpStatusCode.BadRequest, "application/json", bodyType: typeof(GTTPageResults<>))]
         [OpenApiResponseWithoutBody(HttpStatusCode.InternalServerError, Description = "Internal Server Error.")]
-        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Routes.GetSports)] HttpRequestData req,
+        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = Routes.Sports)] HttpRequestData req,
             int pageIndex, int pageSize)
         {
             try
