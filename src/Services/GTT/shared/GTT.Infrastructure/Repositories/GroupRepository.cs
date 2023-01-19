@@ -2,8 +2,10 @@
 using GTT.Application;
 using GTT.Application.Extensions;
 using GTT.Application.Interfaces.Repositories;
+using GTT.Application.Requests;
 using GTT.Application.Response;
 using System.Data;
+using System.Net;
 
 namespace GTT.Infrastructure.Repositories
 {
@@ -22,6 +24,57 @@ namespace GTT.Infrastructure.Repositories
         public GroupRepository(IDbConnection connection)
         {
             _connection = connection;
+        }
+
+        public async Task<BaseResponseModel> CreateGroup(CreateGroupRequestModel request)
+        {
+            try
+            {
+                var queryCheckName = @"SELECT GroupName FROM Groups e
+                                            WHERE e.GroupName = @GrName";
+
+                var query = @"INSERT INTO Groups (GroupName, GroupImage, IsActive, Description, Location, GroupType, Sport, TotalRunner, CreatedDate, CreatedBy, UpdatedBy, UpdatedDate)
+                                VALUES (@GrName, @GrImage, @IsActive, @Description, @Location, @GrType, @Sport, @TotalRunner, @CreatedDate, @CreatedBy, @UpdateBy, @UpdatedDate)
+                                select top 1 GroupId, GroupName, Description, Location, Sport, GroupType, CreatedDate, TotalRunner, IsActive 
+                                FROM Groups
+                                ORDER BY GroupId desc";
+
+                var parameters = new DynamicParameters();
+                parameters.Add("@GrName", request.GroupName);
+                parameters.Add("@GrImage", request.GroupImage);
+                parameters.Add("@IsActive", request.IsActive);
+                parameters.Add("@Description", request.Description);
+                parameters.Add("@Location", request.Location);
+                parameters.Add("@GrType", request.GroupType);
+                parameters.Add("@Sport", request.Sport);
+                parameters.Add("@TotalRunner", request.TotalRunner);
+                parameters.Add("@CreatedDate", request.CreatedDate);
+                parameters.Add("@CreatedBy", request.CreatedBy);
+                parameters.Add("@UpdateBy", request.UpdatedBy);
+                parameters.Add("@UpdatedDate", request.UpdatedDate);
+
+                var checkName = await _connection.QueryFirstOrDefaultAsync(queryCheckName, parameters);
+
+                if (checkName == null)
+                {
+                    var result = await _connection.QueryFirstAsync<GroupsResponse>(query, parameters);
+
+                    return new BaseResponseModel(result);
+                }
+                else
+                {
+                    return new BaseResponseModel
+                    (
+                        HttpStatusCode.BadRequest,
+                        "Group Name must be unique"
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                var error = $"GroupRepository - {Helpers.BuildErrorMessage(ex)}";
+                throw new Exception(error);
+            }
         }
         #endregion
 
