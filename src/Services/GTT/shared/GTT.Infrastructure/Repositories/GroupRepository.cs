@@ -33,11 +33,8 @@ namespace GTT.Infrastructure.Repositories
                 var queryCheckName = @"SELECT GroupName FROM Groups e
                                             WHERE e.GroupName = @GrName";
 
-                var query = @"INSERT INTO Groups (GroupName, GroupImage, IsActive, Description, Location, GroupType, Sport, TotalRunner, CreatedDate, CreatedBy, UpdatedBy, UpdatedDate)
-                                VALUES (@GrName, @GrImage, @IsActive, @Description, @Location, @GrType, @Sport, @TotalRunner, @CreatedDate, @CreatedBy, @UpdateBy, @UpdatedDate)
-                                select top 1 GroupId, GroupName, Description, Location, Sport, GroupType, CreatedDate, TotalRunner, IsActive 
-                                FROM Groups
-                                ORDER BY GroupId desc";
+                var query = @"INSERT INTO Groups (GroupName, GroupImage, IsActive, Description, Location, GroupType, TotalRunner, CreatedDate, CreatedBy, UpdatedBy, UpdatedDate)
+                                VALUES (@GrName, @GrImage, @IsActive, @Description, @Location, @GrType, @TotalRunner, @CreatedDate, @CreatedBy, @UpdateBy, @UpdatedDate)";
 
                 var parameters = new DynamicParameters();
                 parameters.Add("@GrName", request.GroupName);
@@ -46,7 +43,6 @@ namespace GTT.Infrastructure.Repositories
                 parameters.Add("@Description", request.Description);
                 parameters.Add("@Location", request.Location);
                 parameters.Add("@GrType", request.GroupType);
-                parameters.Add("@Sport", request.Sport);
                 parameters.Add("@TotalRunner", request.TotalRunner);
                 parameters.Add("@CreatedDate", request.CreatedDate);
                 parameters.Add("@CreatedBy", request.CreatedBy);
@@ -57,9 +53,13 @@ namespace GTT.Infrastructure.Repositories
 
                 if (checkName == null)
                 {
-                    var result = await _connection.QueryFirstAsync<GroupsResponse>(query, parameters);
+                    await _connection.QueryFirstAsync<GroupsResponse>(query, parameters);
 
-                    return new BaseResponseModel(result);
+                    return new BaseResponseModel
+                        (
+                            HttpStatusCode.Created,
+                            "Group Name be created success"
+                        );
                 }
                 else
                 {
@@ -82,7 +82,7 @@ namespace GTT.Infrastructure.Repositories
         {
             try
             {
-                var sql = @$"SELECT GroupId ,GroupName, Description, Location, Sport, GroupType, CreatedDate, TotalRunner, IsActive
+                var sql = @$"SELECT GroupId ,GroupName, Description, Location, GroupType, CreatedDate, TotalRunner, IsActive
                             FROM Groups
                             ORDER BY GroupName ASC
                             OFFSET @offset ROWS

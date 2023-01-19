@@ -16,7 +16,6 @@ namespace GTT.Application.Requests
         public string Website { get; set; }
         public string Location { get; set; }
         public string GroupType { get; set; }
-        public int Sport { get; set; }
         public int TotalRunner { get; set; }
         public bool IsActive { get; set; }
 
