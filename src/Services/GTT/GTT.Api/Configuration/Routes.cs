@@ -37,7 +37,6 @@ public static class Routes
     /// </summary>
     #region GroupManagement
     public const string Group = "v1/groups";
-    public const string CreateGroup = "v1/groups";
     #endregion
 
     /// <summary>

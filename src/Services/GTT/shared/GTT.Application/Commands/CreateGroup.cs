@@ -24,13 +24,9 @@ namespace GTT.Application.Commands.GroupLib
                 RuleFor(x => x.data.GroupName)
                     .NotEmpty().WithMessage("Exercise name is not empty")
                     .NotNull().WithMessage("Exercise name is not null");
-         /*       RuleFor(x => x.data.Description)
-                    .NotEmpty().WithMessage("Class id is not empty")
-                    .NotNull().WithMessage("Class id is not null")
-                    .GreaterThan(0).WithMessage("Class id is greater than 0");*/
                 RuleFor(x => x.data.Location)
-                    .NotEmpty().WithMessage("Focus Area is not empty")
-                    .NotNull().WithMessage("Focus Area is not null");
+                    .NotEmpty().WithMessage("Group name is not empty")
+                    .NotNull().WithMessage("Group name is not null");
                 RuleFor(x => x.data.GroupImage)
                     .NotEmpty().WithMessage("Equipment is not empty")
                     .NotNull().WithMessage("Equipment is not null");

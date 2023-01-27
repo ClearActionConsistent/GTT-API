@@ -2,18 +2,12 @@
 using GTT.Application.Extensions;
 using GTT.Application.Response;
 using MediatR;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using GTT.Application.Requests;
 using GTT.Application.Commands.GroupLib;
 using System.ComponentModel.DataAnnotations;
@@ -42,7 +36,7 @@ namespace GTT_API.GroupManagement
         [OpenApiResponseWithBody(HttpStatusCode.OK, "application/json", bodyType: typeof(BaseResponseModel))]
         [OpenApiResponseWithBody(HttpStatusCode.BadRequest, "application/json", bodyType: typeof(BaseResponseModel))]
         [OpenApiResponseWithoutBody(HttpStatusCode.InternalServerError, Description = "Internal Server Error.")]
-        public async Task<HttpResponseData> RunAsync([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Routes.CreateGroup)] HttpRequestData req)
+        public async Task<HttpResponseData> RunAsync([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = Routes.Group)] HttpRequestData req)
         {
             try
             {
