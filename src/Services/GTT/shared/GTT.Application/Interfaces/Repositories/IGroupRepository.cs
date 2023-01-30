@@ -1,4 +1,5 @@
-﻿using GTT.Application.Response;
+﻿using GTT.Application.Requests;
+using GTT.Application.Response;
 using GTT.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,6 @@ namespace GTT.Application.Interfaces.Repositories
     public interface IGroupRepository
     {
         Task<ListGroupResponse> GetGroups(int pageSize, int pageIndex);
+        Task<GroupResponse> UpdateGroup(UpdateGroupRequestModel group);
     }
 }
