@@ -80,7 +80,7 @@ namespace GTT.Infrastructure.Repositories
                 var queryName = $"SELECT GroupName FROM Groups WHERE GroupName LIKE '%{group.GroupName}%'";
                 var groupName = await _connection.QueryFirstOrDefaultAsync<string>(queryName, commandType: CommandType.Text);
 
-                //Handle case UI update group name which was used similar to the Group's name want to be updated 
+                //Handle case UI update group name which was used similar to the Group's name want to be updated from UI
                 if (groupName != null && queryGroup.GroupName != group.GroupName)
                 {
                     throw new Exception("Group name has already existed !");
