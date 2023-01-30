@@ -5,7 +5,8 @@ namespace GTT.Application.Interfaces.Repositories
 {
     public interface ISportsRepository
     {
-        Task<int> CreateSport(CreateSportRequestModel request);
+        Task<BaseResponseModel> CreateSport(SportRequestModel request);
         Task<ListSportsResponse> GetSports(int pageIndex, int pageSize);
+        Task<BaseResponseModel> UpdateSport(int sportId, SportRequestModel request);
     }
 }

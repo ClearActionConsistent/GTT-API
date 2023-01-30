@@ -1,6 +1,6 @@
 ﻿namespace GTT.Application.Requests
 {
-    public class CreateSportRequestModel
+    public class SportRequestModel
     {
         public string SportImage { get; set; }
         public string SportName { get; set; }

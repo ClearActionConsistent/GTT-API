@@ -51,5 +51,6 @@ public static class Routes
     /// </summary>
     #region Sports Management
     public const string Sports = "v1/sports";
+    public const string UpdateSportById = "v1/sports/{id}";
     #endregion
 }

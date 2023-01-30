@@ -5,6 +5,7 @@ using GTT.Application.Requests;
 using GTT.Application;
 using GTT.Application.Extensions;
 using GTT.Application.Response;
+using System.Net;
 
 namespace GTT.Infrastructure.Repositories
 {
@@ -26,27 +27,39 @@ namespace GTT.Infrastructure.Repositories
         }
         #endregion
 
-        public async Task<int> CreateSport(CreateSportRequestModel request)
+        public async Task<BaseResponseModel> CreateSport(SportRequestModel request)
         {
             try
             {
-                var query = @"INSERT INTO Sports(SportImage, SportName, SportType, CreatedBy, IsActive)
-                              VALUES (@sportImage, @sportName, @sportType, NULL, @isActive)";
+                var sportName = await CheckSportNameIsUnique(request.SportName);
+                if (sportName != null)
+                {
+                    return new BaseResponseModel(HttpStatusCode.BadRequest, "Sport name has already existed!");
+                }
+
+                var query = @"INSERT INTO Sports(SportImage, SportName, SportType, CreatedBy,CreatedDate, IsActive)
+                              VALUES (@sportImage, @sportName, @sportType, @createdBy,@createdDate, @isActive)";
 
                 var queryParameters = new DynamicParameters();
                 queryParameters.Add("@sportImage", request.SportImage);
                 queryParameters.Add("@sportName", request.SportName);
                 queryParameters.Add("@sportType", request.SportType);
                 queryParameters.Add("@isActive", request.IsActive);
+                queryParameters.Add("@createdBy", Guid.NewGuid().ToString());
+                queryParameters.Add("@createdDate", DateTime.Now);
 
                 var result = await _connection.ExecuteAsync(query, queryParameters);
+                if (result < 0)
+                {
+                    return new BaseResponseModel(HttpStatusCode.BadRequest, "Failed to insert data into Sports table");
+                }
 
-                return result;
+                return new BaseResponseModel(HttpStatusCode.OK, "Success");
             }
             catch (Exception ex)
             {
                 var error = $"SportsRepository - {Helpers.BuildErrorMessage(ex)}";
-                return -1;
+                return null;
             }
         }
 
@@ -87,7 +100,69 @@ namespace GTT.Infrastructure.Repositories
                 };
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
+            {
+                var error = $"SportsRepository - {Helpers.BuildErrorMessage(ex)}";
+                return null;
+            }
+        }
+
+        public async Task<BaseResponseModel> UpdateSport(int sportId, SportRequestModel request)
+        {
+            try
+            {
+                var sportName = await CheckSportNameIsUnique(request.SportName);
+                if (sportName != null)
+                {
+                    return new BaseResponseModel(HttpStatusCode.Created, "Sport name has already existed.");
+                }
+
+                var sql = @"UPDATE Sports
+                            SET SportImage = @sportImage, 
+                                SportName = @sportName, 
+                                SportType = @sportType,
+                                UpdatedBy = @updatedBy,
+                                UpdatedDate = @updatedDate,
+                                IsActive = @isActive
+                            WHERE SportId = @sportId;";
+
+                var queryParameters = new DynamicParameters();
+                queryParameters.Add("@sportImage", request.SportImage);
+                queryParameters.Add("@sportName", request.SportName);
+                queryParameters.Add("@sportType", request.SportType);
+                queryParameters.Add("@isActive", request.IsActive);
+                queryParameters.Add("@updatedBy", Guid.NewGuid().ToString());
+                queryParameters.Add("@updatedDate", DateTime.Now);
+                queryParameters.Add("@sportId", sportId);
+
+                var result = await _connection.ExecuteAsync(sql, queryParameters);
+                if (result < 0)
+                {
+                    return new BaseResponseModel(HttpStatusCode.BadRequest, "Failed to update sport info.");
+                }
+
+                return new BaseResponseModel(null);
+            }
+            catch (Exception ex)
+            {
+                var error = $"SportsRepository - {Helpers.BuildErrorMessage(ex)}";
+                return null;
+            }
+        }
+
+        private async Task<SportReponse> CheckSportNameIsUnique(string sportName)
+        {
+            try
+            {
+                var sql = @$"SELECT SportName
+                             FROM   Sports                             
+                             WHERE  SportName LIKE '%{sportName}%'";
+
+                var result = await _connection.QueryFirstOrDefaultAsync<SportReponse>(sql);
+
+                return result;
+            }
+            catch (Exception ex)
             {
                 var error = $"SportsRepository - {Helpers.BuildErrorMessage(ex)}";
                 return null;
