@@ -23,9 +23,29 @@ namespace GTT.Application.Commands
             public Validator()
             {
                 RuleFor(x => x.data.GroupId)
-                     .NotEmpty()
-                     .WithMessage("Group id is required")
-                     .GreaterThan(0).WithMessage("Group id must greater than 0");
+                    .NotEmpty()
+                    .WithMessage("Group id is required")
+                    .GreaterThan(0).WithMessage("Group id must greater than 0");
+
+                RuleFor(x => x.data.GroupName)
+                    .NotEmpty()
+                    .NotNull()
+                    .WithMessage("Group name is required");
+
+                RuleFor(x => x.data.GroupType)
+                    .NotEmpty()
+                    .NotNull()
+                    .WithMessage("Group type must is required");
+
+                RuleFor(x => x.data.Location)
+                    .NotEmpty()
+                    .NotNull()
+                    .WithMessage("Location is required");
+
+                RuleFor(x => x.data.IsActive)
+                    .NotEmpty()
+                    .NotNull()
+                    .WithMessage("Status Group must is required");
             }
         }
 

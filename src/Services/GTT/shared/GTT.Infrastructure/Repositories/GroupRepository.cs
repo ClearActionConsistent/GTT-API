@@ -5,7 +5,6 @@ using GTT.Application.Interfaces.Repositories;
 using GTT.Application.Requests;
 using GTT.Application.Response;
 using System.Data;
-using System.Net;
 using System.Text;
 
 namespace GTT.Infrastructure.Repositories
@@ -65,7 +64,7 @@ namespace GTT.Infrastructure.Repositories
         {
             try
             {
-                var checkGroup = $"SELECT * FROM Groups WHERE GroupId = {group.GroupId}";
+                var checkGroup = $"SELECT GroupId, GroupName FROM Groups WHERE GroupId = {group.GroupId};";
                 var queryGroup = await _connection.QueryFirstOrDefaultAsync<GroupResponse>(checkGroup, commandType: CommandType.Text);
 
                 if (queryGroup == null)
@@ -73,27 +72,33 @@ namespace GTT.Infrastructure.Repositories
                     throw new Exception("Group is invalid !");
                 }
 
-                var queryName = $"SELECT * FROM Groups WHERE GroupName LIKE '%{group.GroupName}%'";
-                var groupName = await _connection.QueryFirstOrDefaultAsync(queryName, commandType: CommandType.Text);
-                if (groupName != null)
+                //Remove all current list sport 
+                var queryRemoveSport = $"DELETE FROM SportGroup WHERE GroupId = {group.GroupId};";
+                await _connection.ExecuteAsync(queryRemoveSport, commandType: CommandType.Text);
+
+                //Check group name unique
+                var queryName = $"SELECT GroupName FROM Groups WHERE GroupName LIKE '%{group.GroupName}%'";
+                var groupName = await _connection.QueryFirstOrDefaultAsync<string>(queryName, commandType: CommandType.Text);
+
+                if (groupName != null && queryGroup.GroupName != group.GroupName)
                 {
-                    throw new Exception("Groupname has already existed !");
+                    throw new Exception("Group name has already existed !");
                 }
 
-                //Update sport of group;
-                if (group.Sport.Count > 0)
+                //Update sport for group
+                if (group.Sports.Count > 0)
                 {
                     StringBuilder sb = new StringBuilder();
 
-                    for(int i = 0; i < group.Sport.Count; i++)
+                    for(int i = 0; i < group.Sports.Count; i++)
                     {
-                        if(group.Sport.Count == 1 || i == group.Sport.Count - 1)
+                        if(group.Sports.Count == 1 || i == group.Sports.Count - 1)
                         {
-                            sb.Append($"({group.Sport[i]}, {group.GroupId});");
+                            sb.Append($"({group.Sports[i]}, {group.GroupId});");
                             break;
                         }
 
-                        sb.Append($"({group.Sport[i]}, {group.GroupId}), ");
+                        sb.Append($"({group.Sports[i]}, {group.GroupId}), ");
                     }
 
                     var query = $"INSERT INTO SportGroup (SportId, GroupId) VALUES {sb}";
@@ -122,7 +127,7 @@ namespace GTT.Infrastructure.Repositories
                                                 IsDeleted = g.isDeleted
                                           FROM Groups g
                                           WHERE GroupId = @groupId                     
-                                          SELECT * FROM Groups WHERE GroupId = @groupId";
+                                          SELECT * FROM Groups WHERE GroupId = @groupId;";
              
                 var queryParameters = new DynamicParameters();
                 queryParameters.Add("@groupName", group.GroupName);
@@ -145,7 +150,6 @@ namespace GTT.Infrastructure.Repositories
                 var error = $"GroupRepository - {Helpers.BuildErrorMessage(ex)}";
                 throw new Exception(error);
             }
-
         }
     }
 }
