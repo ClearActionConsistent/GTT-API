@@ -64,7 +64,7 @@ namespace GTT.Infrastructure.Repositories
         {
             try
             {
-                var checkGroup = $"SELECT GroupId, GroupName FROM Groups WHERE GroupId = {group.GroupId};";
+                var checkGroup = $"SELECT GroupName FROM Groups WHERE GroupId = {group.GroupId};";
                 var queryGroup = await _connection.QueryFirstOrDefaultAsync<GroupResponse>(checkGroup, commandType: CommandType.Text);
 
                 if (queryGroup == null)
@@ -72,7 +72,7 @@ namespace GTT.Infrastructure.Repositories
                     throw new Exception("Group is invalid !");
                 }
 
-                //Remove all current list sport 
+                //Remove all current list sports 
                 var queryRemoveSport = $"DELETE FROM SportGroup WHERE GroupId = {group.GroupId};";
                 await _connection.ExecuteAsync(queryRemoveSport, commandType: CommandType.Text);
 
@@ -80,6 +80,7 @@ namespace GTT.Infrastructure.Repositories
                 var queryName = $"SELECT GroupName FROM Groups WHERE GroupName LIKE '%{group.GroupName}%'";
                 var groupName = await _connection.QueryFirstOrDefaultAsync<string>(queryName, commandType: CommandType.Text);
 
+                //Handle case UI update group name which was used similar to the Group's name want to be updated 
                 if (groupName != null && queryGroup.GroupName != group.GroupName)
                 {
                     throw new Exception("Group name has already existed !");

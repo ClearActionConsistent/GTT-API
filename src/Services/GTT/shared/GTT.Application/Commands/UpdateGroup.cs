@@ -25,7 +25,7 @@ namespace GTT.Application.Commands
                 RuleFor(x => x.data.GroupId)
                     .NotEmpty()
                     .WithMessage("Group id is required")
-                    .GreaterThan(0).WithMessage("Group id must greater than 0");
+                    .GreaterThan(0).WithMessage("Group id greater than 0");
 
                 RuleFor(x => x.data.GroupName)
                     .NotEmpty()
@@ -35,7 +35,7 @@ namespace GTT.Application.Commands
                 RuleFor(x => x.data.GroupType)
                     .NotEmpty()
                     .NotNull()
-                    .WithMessage("Group type must is required");
+                    .WithMessage("Group type is required");
 
                 RuleFor(x => x.data.Location)
                     .NotEmpty()
@@ -45,7 +45,7 @@ namespace GTT.Application.Commands
                 RuleFor(x => x.data.IsActive)
                     .NotEmpty()
                     .NotNull()
-                    .WithMessage("Status Group must is required");
+                    .WithMessage("Status Group is required");
             }
         }
 

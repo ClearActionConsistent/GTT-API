@@ -38,7 +38,7 @@ namespace GTT_API.GroupManagement
         {
             try
             {
-                _logger.LogInformation("C# HTTP Trigger function CreateSportsFunction request.");
+                _logger.LogInformation("C# HTTP Trigger function UpdateGroupFunction request.");
                 var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 var data = JsonConvert.DeserializeObject<UpdateGroupRequestModel>(requestBody);
                 var result = await _mediator.Send(new GTT.Application.Commands.UpdateGroup.Command(data));
