@@ -44,7 +44,6 @@ namespace GTT.Application.Commands
 
                 RuleFor(x => x.data.IsActive)
                     .NotEmpty()
-                    .NotNull()
                     .WithMessage("Status Group is required");
             }
         }

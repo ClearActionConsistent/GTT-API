@@ -10,6 +10,6 @@
         public string Website { get; set; }
         public string GroupType { get; set; }
         public List<int> Sports { get; set; }
-        public bool IsActive { get; set; }
+        public bool? IsActive { get; set; }
     }
 }
