@@ -1,17 +1,20 @@
 ﻿using Dapper;
 using GTT.Application;
+using GTT.Application.Common.Repositories;
 using GTT.Application.Extensions;
 using GTT.Application.Interfaces.Repositories;
 using GTT.Application.Requests;
 using GTT.Application.Response;
 using System.Data;
 using System.Net;
+using System.Text;
 
 namespace GTT.Infrastructure.Repositories
 {
     public class GroupRepository : IGroupRepository
     {
         #region Private Members
+        private readonly IGroupSport _groupSport;
         private readonly IDbConnection _connection;
         #endregion
 
@@ -19,22 +22,31 @@ namespace GTT.Infrastructure.Repositories
         public GroupRepository(IDbConnectionFactory dbConnectionFactory)
         {
             _connection = dbConnectionFactory.CreateConnection();
+            _groupSport = new GroupSportRepository(dbConnectionFactory);
         }
 
         public GroupRepository(IDbConnection connection)
         {
             _connection = connection;
+            _groupSport = new GroupSportRepository(connection);
         }
+
+        #endregion
 
         public async Task<BaseResponseModel> CreateGroup(CreateGroupRequestModel request)
         {
             try
             {
+
                 var queryCheckName = @"SELECT GroupName FROM Groups e
                                             WHERE e.GroupName = @GrName";
 
                 var query = @"INSERT INTO Groups (GroupName, GroupImage, IsActive, Description, Location, GroupType, TotalRunner, CreatedDate, CreatedBy, UpdatedBy, UpdatedDate)
-                                VALUES (@GrName, @GrImage, @IsActive, @Description, @Location, @GrType, @TotalRunner, @CreatedDate, @CreatedBy, @UpdateBy, @UpdatedDate)";
+                                VALUES (@GrName, @GrImage, @IsActive, @Description, @Location, @GrType, @TotalRunner, @CreatedDate, @CreatedBy, @UpdateBy, @UpdatedDate);
+                            SELECT GroupId FROM Groups 
+                            ORDER BY GroupId desc 
+                            OFFSET 0 ROWS
+                            FETCH FIRST 1 ROWS ONLY;";
 
                 var parameters = new DynamicParameters();
                 parameters.Add("@GrName", request.GroupName);
@@ -53,13 +65,21 @@ namespace GTT.Infrastructure.Repositories
 
                 if (checkName == null)
                 {
-                    await _connection.QueryFirstAsync<GroupsResponse>(query, parameters);
-
-                    return new BaseResponseModel
+                    var exc = await _connection.QueryFirstOrDefaultAsync<GroupsResponse>(query, parameters);
+                    var insertGS = await _groupSport.CreateGroupSport(request.Sports, exc.GroupId);
+                    if (!insertGS)
+                    {
+                        return new BaseResponseModel
                         (
-                            HttpStatusCode.Created,
-                            "Group Name be created success"
+                            HttpStatusCode.BadRequest,
+                            "Can't create group with this sports"
                         );
+                    }
+                    return new BaseResponseModel
+                    (
+                        HttpStatusCode.Created,
+                        "Group Name be created success"
+                    );
                 }
                 else
                 {
@@ -76,7 +96,6 @@ namespace GTT.Infrastructure.Repositories
                 throw new Exception(error);
             }
         }
-        #endregion
 
         public async Task<ListGroupResponse> GetGroups(int pageSize, int pageIndex)
         {
