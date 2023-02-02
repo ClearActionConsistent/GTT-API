@@ -1,6 +1,6 @@
 ﻿namespace GTT.Application.Response
 {
-    public class ListGroupResponse
+    public class ListGroupsResponse
     {
         public List<GroupsResponse> Groups { get; set; } = new List<GroupsResponse>();
         public int TotalRow { get; set; }
@@ -16,7 +16,7 @@
 
         public string Location { get; set; }
 
-        public int Sport { get; set; }
+        public string Sports { get; set; }
 
         public string GroupType { get; set; }
 

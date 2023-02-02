@@ -10,6 +10,6 @@ namespace GTT.Application.Interfaces.Repositories
 {
     public interface IGroupRepository
     {
-        Task<ListGroupResponse> GetGroups(int pageSize, int pageIndex);
+        Task<ListGroupsResponse> GetGroups(int pageSize, int pageIndex);
     }
 }

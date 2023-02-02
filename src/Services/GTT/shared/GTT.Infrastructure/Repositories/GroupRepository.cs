@@ -25,12 +25,24 @@ namespace GTT.Infrastructure.Repositories
         }
         #endregion
 
-        public async Task<ListGroupResponse> GetGroups(int pageSize, int pageIndex)
+        public async Task<ListGroupsResponse> GetGroups(int pageSize, int pageIndex)
         {
             try
             {
-                var sql = @$"SELECT GroupId ,GroupName, Description, Location, Sport, GroupType, CreatedDate, TotalRunner, IsActive
-                            FROM Groups
+                var sql = @$"SELECT 
+                                g.GroupId ,g.GroupName, 
+                                g.Description, g.Location, 
+                                g.GroupType, STRING_AGG(s.SportName,',') AS Sports, 
+                                g.CreatedDate, g.TotalRunner, g.IsActive
+                            FROM Groups g
+							JOIN SportGroup sg 
+                                ON g.GroupId = sg.GroupId
+							JOIN Sports s 
+                                ON sg.SportId = s.SportId
+                            GROUP BY g.GroupId, g.GroupName, 
+                                     g.Description, g.Location,
+                                     g.GroupType, g.CreatedDate,
+                                     g.TotalRunner, g.IsActive
                             ORDER BY GroupName ASC
                             OFFSET @offset ROWS
                             FETCH NEXT @limit ROW ONLY;
@@ -45,7 +57,7 @@ namespace GTT.Infrastructure.Repositories
                 var groups = (await query.ReadAsync<GroupsResponse>()).ToList();
                 var totalRow = await query.ReadSingleOrDefaultAsync<long>();
 
-                return new ListGroupResponse
+                return new ListGroupsResponse
                 {
                     Groups = groups,
                     TotalRow = (int)totalRow
