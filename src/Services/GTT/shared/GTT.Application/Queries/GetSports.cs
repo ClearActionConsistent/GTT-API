@@ -11,7 +11,7 @@ namespace GTT.Application.Queries
         public record Query(
             int pageIndex,
             int pageSize
-            ) : IRequest<GTTPageResults<SportReponse>>;
+            ) : IRequest<GTTPageResults<SportResponse>>;
 
         internal class Validator : AbstractValidator<Query>
         {
@@ -26,7 +26,7 @@ namespace GTT.Application.Queries
             }
         }
 
-        internal class Handler : IRequestHandler<Query, GTTPageResults<SportReponse>>
+        internal class Handler : IRequestHandler<Query, GTTPageResults<SportResponse>>
         {
             private readonly ISportsRepository _sportsRepository;
 
@@ -35,7 +35,7 @@ namespace GTT.Application.Queries
                 _sportsRepository = sportsRepository;
             }
 
-            public async Task<GTTPageResults<SportReponse>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<GTTPageResults<SportResponse>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var result = await _sportsRepository.GetSports(request.pageIndex, request.pageSize);
 

@@ -7,9 +7,10 @@ using GTT.Application.Interfaces.Repositories;
 
 namespace GTT.Application.Commands
 {
-    public class CreateSport
+    public class UpdateSport
     {
         public record Command(
+        int sportId,
         SportRequestModel data
         ) : IRequest<BaseResponseModel>;
 
@@ -17,6 +18,9 @@ namespace GTT.Application.Commands
         {
             public Validator()
             {
+                RuleFor(x => x.sportId)
+                    .GreaterThan(0).WithMessage("SportId is greater than 0")
+                    .NotNull().WithMessage("SportId is required");
                 RuleFor(x => x.data.SportName)
                      .NotEmpty().WithMessage("Sport name is required");
                 RuleFor(x => x.data.SportType)
@@ -38,7 +42,7 @@ namespace GTT.Application.Commands
             public async Task<BaseResponseModel> Handle(Command command, CancellationToken cancellationToken)
             {
                 //handle request command to create sport information
-                var result = await _sportsRepository.CreateSport(command.data);
+                var result = await _sportsRepository.UpdateSport(command.sportId, command.data);
 
                 return result;
             }
