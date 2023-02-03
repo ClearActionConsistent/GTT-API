@@ -1,15 +1,20 @@
 ﻿using Dapper;
 using GTT.Application;
+using GTT.Application.Common.Repositories;
 using GTT.Application.Extensions;
 using GTT.Application.Interfaces.Repositories;
+using GTT.Application.Requests;
 using GTT.Application.Response;
 using System.Data;
+using System.Net;
+using System.Text;
 
 namespace GTT.Infrastructure.Repositories
 {
     public class GroupRepository : IGroupRepository
     {
         #region Private Members
+        private readonly IGroupSport _groupSport;
         private readonly IDbConnection _connection;
         #endregion
 
@@ -17,19 +22,86 @@ namespace GTT.Infrastructure.Repositories
         public GroupRepository(IDbConnectionFactory dbConnectionFactory)
         {
             _connection = dbConnectionFactory.CreateConnection();
+            _groupSport = new GroupSportRepository(dbConnectionFactory);
         }
 
         public GroupRepository(IDbConnection connection)
         {
             _connection = connection;
+            _groupSport = new GroupSportRepository(connection);
         }
+
         #endregion
+
+        public async Task<BaseResponseModel> CreateGroup(CreateGroupRequestModel request)
+        {
+            try
+            {
+
+                var queryCheckName = @"SELECT GroupName FROM Groups e
+                                            WHERE e.GroupName = @GrName";
+
+                var query = @"INSERT INTO Groups (GroupName, GroupImage, IsActive, Description, Location, GroupType, TotalRunner, CreatedDate, CreatedBy, UpdatedBy, UpdatedDate)
+                                VALUES (@GrName, @GrImage, @IsActive, @Description, @Location, @GrType, @TotalRunner, @CreatedDate, @CreatedBy, @UpdateBy, @UpdatedDate);
+                            SELECT GroupId FROM Groups 
+                            ORDER BY GroupId desc 
+                            OFFSET 0 ROWS
+                            FETCH FIRST 1 ROWS ONLY;";
+
+                var parameters = new DynamicParameters();
+                parameters.Add("@GrName", request.GroupName);
+                parameters.Add("@GrImage", request.GroupImage);
+                parameters.Add("@IsActive", request.IsActive);
+                parameters.Add("@Description", request.Description);
+                parameters.Add("@Location", request.Location);
+                parameters.Add("@GrType", request.GroupType);
+                parameters.Add("@TotalRunner", request.TotalRunner);
+                parameters.Add("@CreatedDate", request.CreatedDate);
+                parameters.Add("@CreatedBy", request.CreatedBy);
+                parameters.Add("@UpdateBy", request.UpdatedBy);
+                parameters.Add("@UpdatedDate", request.UpdatedDate);
+
+                var checkName = await _connection.QueryFirstOrDefaultAsync(queryCheckName, parameters);
+
+                if (checkName == null)
+                {
+                    var exc = await _connection.QueryFirstOrDefaultAsync<GroupsResponse>(query, parameters);
+                    var insertGS = await _groupSport.CreateGroupSport(request.Sports, exc.GroupId);
+                    if (!insertGS)
+                    {
+                        return new BaseResponseModel
+                        (
+                            HttpStatusCode.BadRequest,
+                            "Can't create group with this sports"
+                        );
+                    }
+                    return new BaseResponseModel
+                    (
+                        HttpStatusCode.Created,
+                        "Group Name be created success"
+                    );
+                }
+                else
+                {
+                    return new BaseResponseModel
+                    (
+                        HttpStatusCode.BadRequest,
+                        "Group Name must be unique"
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                var error = $"GroupRepository - {Helpers.BuildErrorMessage(ex)}";
+                throw new Exception(error);
+            }
+        }
 
         public async Task<ListGroupResponse> GetGroups(int pageSize, int pageIndex)
         {
             try
             {
-                var sql = @$"SELECT GroupId ,GroupName, Description, Location, Sport, GroupType, CreatedDate, TotalRunner, IsActive
+                var sql = @$"SELECT GroupId ,GroupName, Description, Location, GroupType, CreatedDate, TotalRunner, IsActive
                             FROM Groups
                             ORDER BY GroupName ASC
                             OFFSET @offset ROWS
