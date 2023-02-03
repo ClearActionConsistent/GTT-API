@@ -22,14 +22,20 @@ namespace GTT.Application.Commands.GroupLib
             public Valiator()
             {
                 RuleFor(x => x.data.GroupName)
-                    .NotEmpty().WithMessage("Exercise name is not empty")
-                    .NotNull().WithMessage("Exercise name is not null");
-                RuleFor(x => x.data.Location)
                     .NotEmpty().WithMessage("Group name is not empty")
                     .NotNull().WithMessage("Group name is not null");
-                RuleFor(x => x.data.GroupImage)
-                    .NotEmpty().WithMessage("Equipment is not empty")
-                    .NotNull().WithMessage("Equipment is not null");
+                RuleFor(x => x.data.Location)
+                    .NotEmpty().WithMessage("Location is not empty")
+                    .NotNull().WithMessage("Location is not null");
+                RuleFor(x => x.data.GroupType)
+                    .NotEmpty().WithMessage("Group type is not empty")
+                    .NotNull().WithMessage("Group type is not null");
+                RuleFor(x => x.data.Sports)
+                    .NotEmpty().WithMessage("Sport is not empty")
+                    .NotNull().WithMessage("Sport is not null");
+                RuleFor(x => x.data.IsActive)
+                    .NotEmpty().WithMessage("Active is not empty")
+                    .NotNull().WithMessage("Active is not null");
             }
         }
 
