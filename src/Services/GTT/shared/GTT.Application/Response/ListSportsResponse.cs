@@ -2,11 +2,11 @@
 {
     public class ListSportsResponse
     {
-        public List<SportReponse> Sports { get; set; } = new List<SportReponse>();
+        public List<SportResponse> Sports { get; set; } = new List<SportResponse>();
         public int TotalRow { get; set; }
     }
 
-    public class SportReponse
+    public class SportResponse
     {
         public int SportId { get; set; }
         public string SportImage { get; set; }

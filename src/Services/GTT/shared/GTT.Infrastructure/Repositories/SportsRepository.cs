@@ -90,7 +90,7 @@ namespace GTT.Infrastructure.Repositories
 
                 var query = await _connection.QueryMultipleAsync(sql, queryParameters, commandType: CommandType.Text);
 
-                var sports = (await query.ReadAsync<SportReponse>()).ToList();
+                var sports = (await query.ReadAsync<SportResponse>()).ToList();
                 var totalRow = await query.ReadSingleOrDefaultAsync<long>();
 
                 return new ListSportsResponse
@@ -111,8 +111,12 @@ namespace GTT.Infrastructure.Repositories
         {
             try
             {
+                var query = $@"SELECT SportName FROM Sports WHERE SportId = {sportId}";
+
+                var sportNameById = await _connection.QueryFirstOrDefaultAsync<string>(query);
+
                 var sportName = await CheckSportNameIsUnique(request.SportName);
-                if (sportName != null)
+                if (sportName != null && sportNameById == request.SportName)
                 {
                     return new BaseResponseModel(HttpStatusCode.Created, "Sport name has already existed.");
                 }
@@ -150,7 +154,7 @@ namespace GTT.Infrastructure.Repositories
             }
         }
 
-        private async Task<SportReponse> CheckSportNameIsUnique(string sportName)
+        private async Task<string> CheckSportNameIsUnique(string sportName)
         {
             try
             {
@@ -158,7 +162,7 @@ namespace GTT.Infrastructure.Repositories
                              FROM   Sports                             
                              WHERE  SportName LIKE '%{sportName}%'";
 
-                var result = await _connection.QueryFirstOrDefaultAsync<SportReponse>(sql);
+                var result = await _connection.QueryFirstOrDefaultAsync<string>(sql);
 
                 return result;
             }

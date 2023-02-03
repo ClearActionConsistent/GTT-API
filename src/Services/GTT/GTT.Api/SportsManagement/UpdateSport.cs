@@ -13,7 +13,7 @@ using GTT.Application.Extensions;
 using GTT.Application.Response;
 using Microsoft.OpenApi.Models;
 
-namespace GTT_API.ExcerciseGroupManagement
+namespace GTT_API.SportsManagement
 {
     public class UpdateSport
     {

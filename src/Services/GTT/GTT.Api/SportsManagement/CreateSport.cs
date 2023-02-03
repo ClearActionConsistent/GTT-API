@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Http;
 using GTT.Application.Extensions;
 using GTT.Application.Response;
 
-namespace GTT_API.ExcerciseGroupManagement
+namespace GTT_API.SportsManagement
 {
     public class CreateSport
     {
